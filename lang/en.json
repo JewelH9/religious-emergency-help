@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "home": "Home",
+    "emergency": "Emergency Help",
+    "religions": "Religions",
+    "search": "Search",
+    "bookmarks": "Bookmarks",
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero_title": "Religious Emergency Help",
+    "hero_subtitle": "Immediate guidance for death, funerals, and urgent religious rituals — available in your time of need.",
+    "emergency_btn": "Get Emergency Help Now",
+    "browse_btn": "Browse by Religion"
+  },
+  "emergency": {
+    "title": "Emergency Help",
+    "subtitle": "Select your religion for immediate step-by-step guidance",
+    "immediate_steps": "Immediate Steps",
+    "step_label": "Step"
+  },
+  "religions": {
+    "islam": "Islam",
+    "hinduism": "Hinduism",
+    "christianity": "Christianity",
+    "sikhism": "Sikhism",
+    "buddhism": "Buddhism"
+  },
+  "search": {
+    "placeholder": "Search by religion, ritual or keyword...",
+    "results": "Search Results",
+    "no_results": "No results found. Try a different keyword.",
+    "title": "Search Guides"
+  },
+  "bookmarks": {
+    "title": "My Bookmarks",
+    "empty": "You have no saved guides yet.",
+    "save": "Save Guide",
+    "saved": "Saved",
+    "remove": "Remove Bookmark"
+  },
+  "auth": {
+    "signin_title": "Sign In",
+    "signup_title": "Create Account",
+    "email": "Email Address",
+    "password": "Password",
+    "signin_btn": "Sign In",
+    "signup_btn": "Create Account",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "signup_link": "Sign Up",
+    "signin_link": "Sign In"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again.",
+    "download_pdf": "Download as PDF",
+    "back": "Back",
+    "read_more": "Read More",
+    "close": "Close"
+  }
+}
