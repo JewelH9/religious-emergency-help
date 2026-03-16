@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Religion Guide — Religious Emergency Help</title>
+    <meta
+      name="description"
+      content="Detailed religious emergency procedures and guides."
+    />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      /* ---- Hero Banner ---- */
+      .guide-hero {
+        padding: calc(var(--nav-height) + var(--space-12)) 0 var(--space-12);
+        background: var(--color-bg-dark);
+        color: #ffffff;
+      }
+      .guide-hero-inner {
+        display: flex;
+        align-items: center;
+        gap: var(--space-6);
+      }
+      .guide-hero-icon {
+        font-size: 4rem;
+        width: 96px;
+        height: 96px;
+        border-radius: var(--radius-xl);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+      .guide-hero-text h1 {
+        font-size: var(--font-size-3xl);
+        font-weight: 800;
+        margin-bottom: var(--space-2);
+      }
+      .guide-hero-text p {
+        color: #94a3b8;
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--space-4);
+      }
+      .guide-hero-tags {
+        display: flex;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+      }
+      .guide-tag {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-xs);
+        font-weight: 600;
+      }
+
+      /* ---- Tab Navigation ---- */
+      .tab-bar {
+        background: var(--color-bg-card);
+        border-bottom: 2px solid var(--color-border);
+        position: sticky;
+        top: var(--nav-height);
+        z-index: 800;
+      }
+      .tab-bar-inner {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .tab-bar-inner::-webkit-scrollbar {
+        display: none;
+      }
+      .tab-btn {
+        padding: var(--space-4) var(--space-5);
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text-muted);
+        border: none;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        background: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all var(--transition);
+      }
+      .tab-btn:hover {
+        color: var(--color-text-primary);
+      }
+      .tab-btn.active {
+        color: var(--color-emergency);
+        border-bottom-color: var(--color-emergency);
+      }
+
+      /* ---- Main content ---- */
+      .religion-content {
+        padding: var(--space-10) 0 var(--space-16);
+      }
+
+      /* ---- Tab panels ---- */
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ---- Overview Panel ---- */
+      .overview-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: var(--space-8);
+        align-items: start;
+      }
+      .overview-intro {
+        font-size: var(--font-size-lg);
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        margin-bottom: var(--space-6);
+      }
+      .key-facts {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+      }
+      .key-facts h3 {
+        font-size: var(--font-size-base);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .fact-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid var(--color-border);
+        font-size: var(--font-size-sm);
+      }
+      .fact-row:last-child {
+        border-bottom: none;
+      }
+      .fact-label {
+        color: var(--color-text-muted);
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .fact-value {
+        color: var(--color-text-primary);
+        text-align: right;
+      }
+
+      /* ---- Procedures Panel ---- */
+      .procedures-section {
+        margin-bottom: var(--space-10);
+      }
+      .procedures-section-title {
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-6);
+        padding-bottom: var(--space-3);
+        border-bottom: 2px solid var(--color-border);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+      }
+      .procedures-section-title span.icon {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        background: var(--religion-bg, #f1f5f9);
+      }
+
+      /* ---- Prayers Panel ---- */
+      .prayer-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        margin-bottom: var(--space-6);
+      }
+      .prayer-name {
+        font-size: var(--font-size-lg);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-1);
+      }
+      .prayer-occasion {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-4);
+      }
+      .prayer-text {
+        background: var(--color-bg-page);
+        border-left: 3px solid var(--color-emergency);
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        padding: var(--space-4) var(--space-5);
+        font-style: italic;
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        margin-bottom: var(--space-3);
+      }
+      .prayer-meaning {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+      }
+
+      /* ---- Checklist Panel ---- */
+      .checklist-group {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        margin-bottom: var(--space-6);
+      }
+      .checklist-group-title {
+        font-size: var(--font-size-base);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-4);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+      }
+      .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+        padding: var(--space-3) 0;
+        border-bottom: 1px solid var(--color-border);
+        cursor: pointer;
+      }
+      .checklist-item:last-child {
+        border-bottom: none;
+      }
+      .checklist-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        accent-color: var(--color-success);
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .checklist-item label {
+        font-size: var(--font-size-sm);
+        color: var(--color-text-primary);
+        cursor: pointer;
+        line-height: 1.5;
+      }
+      .checklist-item.checked label {
+        text-decoration: line-through;
+        color: var(--color-text-muted);
+      }
+      .checklist-progress {
+        height: 6px;
+        background: var(--color-border);
+        border-radius: var(--radius-full);
+        margin-bottom: var(--space-4);
+        overflow: hidden;
+      }
+      .checklist-progress-bar {
+        height: 100%;
+        background: var(--color-success);
+        border-radius: var(--radius-full);
+        transition: width var(--transition-slow);
+      }
+      .checklist-actions {
+        display: flex;
+        gap: var(--space-3);
+        margin-top: var(--space-6);
+        flex-wrap: wrap;
+      }
+
+      /* ---- Religion cards row (All Religions) ---- */
+      .all-religions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--space-4);
+        margin-top: var(--space-8);
+      }
+      .mini-religion-card {
+        padding: var(--space-4);
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
+        transition: all var(--transition);
+        display: block;
+      }
+      .mini-religion-card:hover {
+        border-color: var(--color-emergency);
+        transform: translateY(-2px);
+        color: inherit;
+      }
+      .mini-religion-card .icon {
+        font-size: 2rem;
+        margin-bottom: var(--space-2);
+      }
+      .mini-religion-card .name {
+        font-weight: 700;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-primary);
+      }
+
+      @media (max-width: 768px) {
+        .overview-grid {
+          grid-template-columns: 1fr;
+        }
+        .guide-hero-inner {
+          flex-direction: column;
+          text-align: center;
+        }
+        .guide-hero-tags {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="nav-brand">
+          <div class="nav-brand-icon">✚</div>
+          <span>Emergency Help</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <a href="emergency.html" data-i18n="nav.emergency">Emergency</a>
+          <a href="religion.html" data-i18n="nav.religions" class="active"
+            >Religions</a
+          >
+          <a href="search.html" data-i18n="nav.search">Search</a>
+          <a href="bookmarks.html" data-i18n="nav.bookmarks">Bookmarks</a>
+          <a href="emergency.html" class="nav-emergency-btn">⚡ Emergency</a>
+        </div>
+        <div class="nav-actions">
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="hi">हि</button>
+            <button class="lang-btn" data-lang="bn">বাং</button>
+          </div>
+          <a href="login.html" class="btn btn-secondary btn-sm" id="authBtn"
+            >Sign In</a
+          >
+        </div>
+        <button class="nav-toggle" id="navToggle">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="guide-hero" id="guideHero">
+      <div class="container">
+        <div class="guide-hero-inner">
+          <div class="guide-hero-icon" id="heroIcon">📖</div>
+          <div class="guide-hero-text">
+            <h1 id="heroTitle">Religion Guides</h1>
+            <p id="heroSubtitle">
+              Select a religion below to view detailed emergency procedures.
+            </p>
+            <div class="guide-hero-tags" id="heroTags"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TAB BAR ===== -->
+    <div class="tab-bar" id="tabBar" style="display: none">
+      <div class="container">
+        <div class="tab-bar-inner">
+          <button class="tab-btn active" data-tab="overview">
+            📋 Overview
+          </button>
+          <button class="tab-btn" data-tab="procedures">📝 Procedures</button>
+          <button class="tab-btn" data-tab="prayers">
+            🙏 Prayers &amp; Texts
+          </button>
+          <button class="tab-btn" data-tab="checklist">✅ Checklist</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CONTENT ===== -->
+    <main class="religion-content">
+      <div class="container">
+        <!-- All Religions View (when no ?r= param) -->
+        <div id="allReligionsView">
+          <div style="text-align: center; margin-bottom: var(--space-8)">
+            <h2
+              style="
+                font-size: var(--font-size-3xl);
+                font-weight: 800;
+                margin-bottom: var(--space-4);
+              "
+            >
+              All Religion Guides
+            </h2>
+            <p
+              style="
+                color: var(--color-text-secondary);
+                font-size: var(--font-size-lg);
+              "
+            >
+              Select a religion to view full emergency procedures.
+            </p>
+          </div>
+          <div class="all-religions-grid">
+            <a href="religion.html?r=islam" class="mini-religion-card">
+              <div class="icon">☪️</div>
+              <div class="name">Islam</div>
+            </a>
+            <a href="religion.html?r=hinduism" class="mini-religion-card">
+              <div class="icon">🕉️</div>
+              <div class="name">Hinduism</div>
+            </a>
+            <a href="religion.html?r=christianity" class="mini-religion-card">
+              <div class="icon">✝️</div>
+              <div class="name">Christianity</div>
+            </a>
+            <a href="religion.html?r=sikhism" class="mini-religion-card">
+              <div class="icon">☬</div>
+              <div class="name">Sikhism</div>
+            </a>
+            <a href="religion.html?r=buddhism" class="mini-religion-card">
+              <div class="icon">☸️</div>
+              <div class="name">Buddhism</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Single Religion View -->
+        <div id="singleReligionView" style="display: none">
+          <!-- Overview Tab -->
+          <div class="tab-panel active" id="panel-overview">
+            <div class="overview-grid">
+              <div>
+                <p class="overview-intro" id="overviewIntro"></p>
+                <div id="overviewExtra"></div>
+              </div>
+              <div class="key-facts" id="keyFacts"></div>
+            </div>
+          </div>
+
+          <!-- Procedures Tab -->
+          <div class="tab-panel" id="panel-procedures">
+            <div id="proceduresContent"></div>
+          </div>
+
+          <!-- Prayers Tab -->
+          <div class="tab-panel" id="panel-prayers">
+            <div id="prayersContent"></div>
+          </div>
+
+          <!-- Checklist Tab -->
+          <div class="tab-panel" id="panel-checklist">
+            <div id="checklistContent"></div>
+            <div class="checklist-actions">
+              <button class="btn btn-primary" onclick="handleDownloadPDF()">
+                📄 Download PDF Checklist
+              </button>
+              <button class="btn btn-secondary" onclick="resetChecklist()">
+                🔄 Reset Checklist
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/app.js"></script>
+    <script>
+      // ============================================================
+      // RELIGION DATA
+      // Detailed data for all 5 religions
+      // ============================================================
+      const RELIGION_DATA = {
+        islam: {
+          name: "Islam",
+          icon: "☪️",
+          color: "#059669",
+          subtitle: "Complete Islamic funeral procedures and Janazah guide",
+          tags: [
+            "Janazah",
+            "Ghusl",
+            "Kafan",
+            "Burial within 24hrs",
+            "Qibla direction",
+          ],
+          intro: `In Islam, death is viewed as a transition to the afterlife (Akhirah). 
+        The funeral rites are governed by Islamic law (Fiqh) and are considered a 
+        collective obligation (Fard Kifaya) on the Muslim community. 
+        The process should be completed as swiftly as possible — ideally within 24 hours of death. 
+        The key rites are Ghusl (ritual washing), Kafan (shrouding), 
+        Salat al-Janazah (funeral prayer), and burial.`,
+          facts: [
+            { label: "Burial type", value: "Earth burial (facing Qibla)" },
+            { label: "Time frame", value: "Within 24 hours" },
+            { label: "Key ritual", value: "Janazah prayer (Fard Kifaya)" },
+            { label: "Washing", value: "Ghusl by same-gender Muslim" },
+            { label: "Shroud", value: "Kafan — white cloth" },
+            { label: "Mourning", value: "3 days (40 days culturally)" },
+            { label: "Cremation", value: "Not permitted in Islam" },
+          ],
+          procedures: [
+            {
+              title: "⚡ Immediate Actions",
+              icon: "🚨",
+              steps: [
+                {
+                  n: 1,
+                  t: "Recite Shahada and close the eyes",
+                  d: "Say: 'La ilaha illallah'. Gently close the eyes with your right hand. Tie the jaw if needed.",
+                },
+                {
+                  n: 2,
+                  t: "Notify the Imam and local mosque",
+                  d: "This is the most important call. The mosque community will coordinate all further steps.",
+                },
+                {
+                  n: 3,
+                  t: "Cover the entire body with a clean white sheet",
+                  d: "The body should be covered respectfully and the room kept quiet.",
+                },
+                {
+                  n: 4,
+                  t: "Position toward Qibla (direction of Mecca)",
+                  d: "Lay on right side or on back with face turned toward Mecca. Use a compass app if needed.",
+                },
+                {
+                  n: 5,
+                  t: "Obtain the death certificate",
+                  d: "Contact the hospital or authorities for official death certification before burial can proceed.",
+                },
+              ],
+            },
+            {
+              title: "🧼 Ghusl — Ritual Washing",
+              icon: "💧",
+              steps: [
+                {
+                  n: 1,
+                  t: "Performed by a same-gender Muslim",
+                  d: "Ghusl must be performed by a Muslim. Husbands may wash wives and vice versa.",
+                },
+                {
+                  n: 2,
+                  t: "Wash the body three times minimum",
+                  d: "Wash with clean water scented with sidr (lote tree leaves). Odd number of washings.",
+                },
+                {
+                  n: 3,
+                  t: "Wash the right side first, then the left",
+                  d: "Follow the Sunnah method. The Imam or a knowledgeable person should guide this process.",
+                },
+                {
+                  n: 4,
+                  t: "Apply camphor in the final wash",
+                  d: "Non-alcoholic perfume (Camphor or Oud) may be applied after the final wash.",
+                },
+              ],
+            },
+            {
+              title: "🕌 Kafan — Shrouding",
+              icon: "🤍",
+              steps: [
+                {
+                  n: 1,
+                  t: "Use white unstitched cotton cloth",
+                  d: "Kafan should be plain white cloth. Expensive or decorated cloth is discouraged.",
+                },
+                {
+                  n: 2,
+                  t: "Men: 3 pieces of cloth",
+                  d: "Izar (lower wrap), Lifafah (full wrap), and Qamees (shirt).",
+                },
+                {
+                  n: 3,
+                  t: "Women: 5 pieces of cloth",
+                  d: "Izar, Lifafah, Qamees, Khimar (head cover), and Khirqa (chest wrap).",
+                },
+                {
+                  n: 4,
+                  t: "Tie loosely at head and feet",
+                  d: "The Kafan is tied loosely. The ties are undone before placing in the grave.",
+                },
+              ],
+            },
+            {
+              title: "🕌 Salat al-Janazah — Funeral Prayer",
+              icon: "🤲",
+              steps: [
+                {
+                  n: 1,
+                  t: "Congregation stands in odd-numbered rows",
+                  d: "The Imam stands facing the Qibla. Men in front, women behind. No Ruku or Sujood.",
+                },
+                {
+                  n: 2,
+                  t: "Four Takbeers (Allahu Akbar)",
+                  d: "1st: Recite Al-Fatiha. 2nd: Salawat on the Prophet. 3rd: Du'a for deceased. 4th: Salam.",
+                },
+                {
+                  n: 3,
+                  t: "End with two Salams",
+                  d: "Turn right then left saying 'Assalamu Alaykum wa Rahmatullah'.",
+                },
+              ],
+            },
+            {
+              title: "⚱️ Burial",
+              icon: "🌱",
+              steps: [
+                {
+                  n: 1,
+                  t: "Grave faces the Qibla direction",
+                  d: "The deceased is placed on their right side, facing Mecca, without a pillow.",
+                },
+                {
+                  n: 2,
+                  t: "Lahd (niche) grave is preferred",
+                  d: "A niche carved into the side of the grave is recommended in Islamic tradition.",
+                },
+                {
+                  n: 3,
+                  t: "Each person places three handfuls of soil",
+                  d: "Recite: 'Minha khalaqnakum, wa fiha nu'idukum, wa minha nukhrijukum taratan ukhra'.",
+                },
+                {
+                  n: 4,
+                  t: "Grave should not be raised more than a hand span",
+                  d: "The grave is slightly raised to be identifiable but not elaborate.",
+                },
+                {
+                  n: 5,
+                  t: "Recite du'a at the graveside",
+                  d: "The Imam leads a supplication asking Allah to grant the deceased Jannah.",
+                },
+              ],
+            },
+          ],
+          prayers: [
+            {
+              name: "Inna Lillahi — Upon hearing of death",
+              occasion: "Recited immediately when death occurs or is announced",
+              arabic: "إِنَّا لِلَّٰهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ",
+              transliteration: "Inna lillahi wa inna ilayhi raji'un",
+              meaning:
+                "Indeed, to Allah we belong and to Him we shall return. (Quran 2:156)",
+            },
+            {
+              name: "Du'a for the Deceased",
+              occasion: "Recited during and after the Janazah prayer",
+              arabic: "اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ",
+              transliteration:
+                "Allahumma-ghfir lahu warhamhu, wa 'afihi wa'fu 'anhu",
+              meaning:
+                "O Allah, forgive him and have mercy on him, and give him strength and pardon him.",
+            },
+            {
+              name: "At the graveside",
+              occasion: "When placing soil into the grave",
+              arabic: "مِنْهَا خَلَقْنَاكُمْ وَفِيهَا نُعِيدُكُمْ",
+              transliteration:
+                "Minha khalaqnakum, wa fiha nu'idukum, wa minha nukhrijukum taratan ukhra",
+              meaning:
+                "From it (earth) We created you, and into it We will return you, and from it We will bring you out once more. (Quran 20:55)",
+            },
+          ],
+          checklist: [
+            {
+              group: "⚡ Immediate (First 1 hour)",
+              items: [
+                "Recite Shahada and close the eyes of the deceased",
+                "Cover the body with a clean white sheet",
+                "Position body toward the Qibla (direction of Mecca)",
+                "Call the local Imam or mosque immediately",
+                "Notify close family members",
+              ],
+            },
+            {
+              group: "📋 Within 2–4 Hours",
+              items: [
+                "Obtain the official death certificate",
+                "Arrange for Ghusl (ritual washing) — same-gender Muslim",
+                "Purchase or obtain Kafan (white burial shroud)",
+                "Contact the cemetery and book burial plot",
+                "Notify the wider Muslim community for Janazah prayer",
+              ],
+            },
+            {
+              group: "🕌 Ceremony Preparation",
+              items: [
+                "Confirm Janazah prayer time and location with Imam",
+                "Arrange transportation of the body to the mosque/prayer ground",
+                "Ensure sufficient pallbearers (men) are available",
+                "Prepare du'a cards or printed prayers for the congregation",
+              ],
+            },
+            {
+              group: "⚱️ Burial",
+              items: [
+                "Confirm grave direction faces the Qibla",
+                "Prepare soil for the three-handful tradition",
+                "Ensure Imam is present for graveside du'a",
+                "Arrange for grave marker (simple, as per Sunnah)",
+              ],
+            },
+          ],
+        },
+
+        hinduism: {
+          name: "Hinduism",
+          icon: "🕉️",
+          color: "#d97706",
+          subtitle: "Antyesti (last rites) — complete Hindu funeral guide",
+          tags: [
+            "Antyesti",
+            "Cremation",
+            "Shraddha",
+            "Pind Daan",
+            "13-day mourning",
+          ],
+          intro: `In Hinduism, death is not an end but a transition — the soul (Atman) leaves 
+        the physical body and continues its journey according to karma and dharma. 
+        The Antyesti (last rites) are the final of the sixteen Samskaras (life rituals) 
+        and are considered essential for the soul's peaceful transition. 
+        Cremation is the primary tradition, as fire is considered purifying and 
+        liberating for the soul. The rituals vary by region, caste, and family tradition.`,
+          facts: [
+            { label: "Burial type", value: "Cremation (Agni Sanskaar)" },
+            { label: "Time frame", value: "Within 24 hours if possible" },
+            { label: "Key ritual", value: "Antyesti — last rites" },
+            { label: "Mourning", value: "13 days (Terahvin)" },
+            { label: "Annual rite", value: "Shraddha on death anniversary" },
+            { label: "Ash immersion", value: "Asthi Visarjan in sacred river" },
+            { label: "Chief mourner", value: "Eldest son traditionally" },
+          ],
+          procedures: [
+            {
+              title: "⚡ Immediate Actions",
+              icon: "🚨",
+              steps: [
+                {
+                  n: 1,
+                  t: "Place the dying person on the floor",
+                  d: "Lay the person on a clean mat on the floor — symbolizing return to the earth (Bhumi Mata).",
+                },
+                {
+                  n: 2,
+                  t: "Recite sacred mantras continuously",
+                  d: "Chant 'Om Namah Shivaya', 'Ram Ram Satya Hai', or Gayatri Mantra. Keep a lamp (diya) burning.",
+                },
+                {
+                  n: 3,
+                  t: "Place Tulsi leaves and Ganga Jal",
+                  d: "Place Tulsi (holy basil) leaves in the mouth and sprinkle Ganga Jal (holy water) if available.",
+                },
+                {
+                  n: 4,
+                  t: "Contact the family Pandit immediately",
+                  d: "The Pandit will determine auspicious timing and guide all ritual procedures for your family tradition.",
+                },
+                {
+                  n: 5,
+                  t: "Notify family and the community",
+                  d: "Inform all family members. The community will gather to support and assist with arrangements.",
+                },
+              ],
+            },
+            {
+              title: "🛁 Preparation of the Body",
+              icon: "🌸",
+              steps: [
+                {
+                  n: 1,
+                  t: "Bathe the body with water and milk",
+                  d: "The body is bathed by close family members. Traditionally using Panchamrit (milk, curd, honey, ghee, sugar).",
+                },
+                {
+                  n: 2,
+                  t: "Apply sacred marks (Tilak or Vibhuti)",
+                  d: "Apply Tilak (red mark) or Vibhuti (sacred ash) on the forehead according to the deity worshipped.",
+                },
+                {
+                  n: 3,
+                  t: "Dress in fresh white clothes",
+                  d: "Men are dressed in white dhoti. Women traditionally in white or the colour of their choice.",
+                },
+                {
+                  n: 4,
+                  t: "Decorate with flowers and garlands",
+                  d: "Place marigolds, roses and other auspicious flowers around and on the body.",
+                },
+                {
+                  n: 5,
+                  t: "Place on the Arthi (funeral bier)",
+                  d: "The body is placed on a bamboo stretcher decorated with flowers for the procession.",
+                },
+              ],
+            },
+            {
+              title: "🔥 Cremation — Antim Sanskaar",
+              icon: "🔥",
+              steps: [
+                {
+                  n: 1,
+                  t: "Funeral procession to the cremation ground",
+                  d: "Male relatives carry the Arthi on their shoulders. Chant 'Ram Naam Satya Hai' throughout.",
+                },
+                {
+                  n: 2,
+                  t: "Build the funeral pyre (Chitta)",
+                  d: "The Pandit supervises the arrangement of wood. Sandalwood pieces are placed near the head.",
+                },
+                {
+                  n: 3,
+                  t: "Circumambulation of the pyre",
+                  d: "The chief mourner (eldest son) circles the pyre three times counterclockwise, carrying a water pot.",
+                },
+                {
+                  n: 4,
+                  t: "Break the water pot and light the pyre",
+                  d: "The pot is broken at the foot. The chief mourner lights the pyre at the head with a torch of Kusha grass.",
+                },
+                {
+                  n: 5,
+                  t: "Recite Vedic mantras throughout",
+                  d: "The Pandit recites Vedic hymns from the Garuda Purana and other sacred texts during cremation.",
+                },
+              ],
+            },
+            {
+              title: "💧 Asthi Visarjan — Ash Immersion",
+              icon: "🌊",
+              steps: [
+                {
+                  n: 1,
+                  t: "Collect the ashes on the third day",
+                  d: "Ashes and bone fragments (Asthi) are collected, typically on the third day after cremation.",
+                },
+                {
+                  n: 2,
+                  t: "Immerse ashes in a sacred river",
+                  d: "The Ganges (Ganga) is most auspicious. Haridwar, Varanasi, Prayagraj are preferred sites. Local rivers are also used.",
+                },
+                {
+                  n: 3,
+                  t: "Perform Tarpan (water offering)",
+                  d: "Family members offer water (Tarpan) and sesame seeds to the ancestors while reciting mantras.",
+                },
+              ],
+            },
+          ],
+          prayers: [
+            {
+              name: "Gayatri Mantra",
+              occasion: "Recited continuously during and after death",
+              arabic: "ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यम्",
+              transliteration:
+                "Om Bhur Bhuvaḥ Swaḥ, Tat-savitur Vareñyaṃ, Bhargo Devasya Dhīmahi, Dhiyo Yo Naḥ Prachodayāt",
+              meaning:
+                "We meditate on the divine light of the Sun. May it illuminate our minds.",
+            },
+            {
+              name: "Maha Mrityunjaya Mantra",
+              occasion: "Recited for the dying person and the deceased",
+              arabic: "ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्",
+              transliteration:
+                "Om Tryambakam Yajamahe Sugandhim Pushtivardhanam, Urvarukamiva Bandhanan Mrityor Mukshiya Mamritat",
+              meaning:
+                "We worship the three-eyed one (Shiva) who is fragrant and nourishes all beings. May he liberate us from death as a ripened cucumber is freed from its vine.",
+            },
+            {
+              name: "Ram Naam Satya Hai",
+              occasion: "Chanted during the funeral procession",
+              arabic: "राम नाम सत्य है",
+              transliteration: "Ram Naam Satya Hai",
+              meaning:
+                "The name of Ram (God) is truth — the ultimate reality. Recited as the body is carried to the cremation ground.",
+            },
+          ],
+          checklist: [
+            {
+              group: "⚡ Immediate (First 1–2 hours)",
+              items: [
+                "Place the body on the ground on a clean mat",
+                "Light a ghee lamp (diya) near the head",
+                "Place Tulsi leaves and sprinkle Ganga Jal",
+                "Begin chanting Mantras and sacred names",
+                "Contact the family Pandit immediately",
+              ],
+            },
+            {
+              group: "🛁 Body Preparation",
+              items: [
+                "Bathe the body with Panchamrit or clean water",
+                "Apply Tilak or Vibhuti on the forehead",
+                "Dress in fresh white clothes",
+                "Decorate with marigold garlands and flowers",
+                "Place on the Arthi (bamboo bier)",
+              ],
+            },
+            {
+              group: "🔥 Cremation Preparation",
+              items: [
+                "Book the cremation ground or arrange wood for pyre",
+                "Obtain camphor, ghee, sandalwood and Kusha grass",
+                "Confirm Pandit will be present",
+                "Arrange pallbearers for the procession",
+                "Notify all family for the final procession",
+              ],
+            },
+            {
+              group: "🌊 Post Cremation",
+              items: [
+                "Collect ashes (Asthi) on the third day",
+                "Arrange travel to a sacred river for Asthi Visarjan",
+                "Perform Tarpan (water and sesame offering)",
+                "Plan Pind Daan on 10th or 13th day",
+                "Arrange Terahvin (13th day) ceremony with Pandit",
+              ],
+            },
+          ],
+        },
+
+        christianity: {
+          name: "Christianity",
+          icon: "✝️",
+          color: "#7c3aed",
+          subtitle: "Christian funeral rites, Last Rites, and burial guide",
+          tags: [
+            "Last Rites",
+            "Funeral Mass",
+            "Burial",
+            "Wake",
+            "Resurrection hope",
+          ],
+          intro: `In Christianity, death is understood through the lens of resurrection — 
+        the belief that the faithful will rise again as Christ rose. 
+        Funeral rites vary significantly between Catholic, Protestant, and Orthodox traditions, 
+        but all center on prayer, community support, and the hope of eternal life. 
+        The body is treated with dignity as a temple of the Holy Spirit. 
+        Both burial and cremation are accepted in most denominations, 
+        though Catholics traditionally prefer burial.`,
+          facts: [
+            { label: "Burial type", value: "Burial (cremation also accepted)" },
+            { label: "Time frame", value: "2–5 days after death" },
+            { label: "Key ritual", value: "Funeral Mass / Service" },
+            { label: "Last Rites", value: "Anointing of the Sick (Catholic)" },
+            { label: "Mourning", value: "Varies by tradition" },
+            { label: "Hope", value: "Resurrection and eternal life" },
+            { label: "Lead by", value: "Priest or Pastor" },
+          ],
+          procedures: [
+            {
+              title: "⚡ Immediate Actions",
+              icon: "🚨",
+              steps: [
+                {
+                  n: 1,
+                  t: "Call a priest immediately if person is dying",
+                  d: "For Catholics: The Sacrament of Anointing of the Sick (Last Rites) should be administered before death if possible.",
+                },
+                {
+                  n: 2,
+                  t: "Pray together as a family",
+                  d: "Recite the Lord's Prayer, Psalm 23, or other comforting scripture together at the bedside.",
+                },
+                {
+                  n: 3,
+                  t: "Notify your church and pastor",
+                  d: "Inform your church community. They will provide pastoral support, practical help and guide all arrangements.",
+                },
+                {
+                  n: 4,
+                  t: "Contact a Christian funeral home",
+                  d: "A funeral director experienced with Christian traditions will guide you through legal and religious requirements.",
+                },
+              ],
+            },
+            {
+              title: "✝️ Last Rites (Catholic)",
+              icon: "💧",
+              steps: [
+                {
+                  n: 1,
+                  t: "Anointing of the Sick — call priest immediately",
+                  d: "The priest anoints the forehead and hands with holy oil, reciting prayers for healing and forgiveness.",
+                },
+                {
+                  n: 2,
+                  t: "Viaticum — final Holy Communion",
+                  d: "If the person can receive it, Viaticum (final Communion) is given as spiritual food for the journey.",
+                },
+                {
+                  n: 3,
+                  t: "Apostolic Pardon",
+                  d: "The priest grants a plenary indulgence and apostolic pardon to the dying person.",
+                },
+              ],
+            },
+            {
+              title: "⛪ The Funeral Service",
+              icon: "🕊️",
+              steps: [
+                {
+                  n: 1,
+                  t: "Hold the Vigil (Wake) the evening before",
+                  d: "Family and friends gather for an evening prayer service. Rosary may be prayed (Catholic). Memories are shared.",
+                },
+                {
+                  n: 2,
+                  t: "Funeral Mass or Memorial Service",
+                  d: "The main ceremony led by the priest/pastor. Includes scripture, homily, prayers, and Eucharist (Catholic).",
+                },
+                {
+                  n: 3,
+                  t: "The Eulogy",
+                  d: "A family member or friend celebrates the life of the deceased with memories and reflections.",
+                },
+                {
+                  n: 4,
+                  t: "Final Commendation and Farewell",
+                  d: "The priest leads a final prayer commending the soul to God before the body is taken to the cemetery.",
+                },
+              ],
+            },
+            {
+              title: "⚱️ Burial or Cremation",
+              icon: "🌿",
+              steps: [
+                {
+                  n: 1,
+                  t: "Funeral procession to the cemetery",
+                  d: "The hearse leads with family following. Mourners may drive with headlights on as a sign of the procession.",
+                },
+                {
+                  n: 2,
+                  t: "Graveside Committal Service",
+                  d: "The priest reads committal prayers at the graveside. Holy water or earth may be sprinkled on the coffin.",
+                },
+                {
+                  n: 3,
+                  t: "Final blessing and lowering of the coffin",
+                  d: "Mourners may place flowers. The priest gives a final blessing as the coffin is lowered.",
+                },
+                {
+                  n: 4,
+                  t: "If cremation: treat ashes with same respect",
+                  d: "Ashes should be kept together and either buried or placed in a columbarium — not scattered (Catholic guidance).",
+                },
+              ],
+            },
+          ],
+          prayers: [
+            {
+              name: "The Lord's Prayer",
+              occasion:
+                "Recited at all Christian funeral and mourning occasions",
+              arabic: "Our Father who art in heaven, hallowed be thy name...",
+              transliteration:
+                "Our Father, who art in heaven, hallowed be thy name; thy kingdom come; thy will be done on earth as it is in heaven. Give us this day our daily bread; and forgive us our trespasses as we forgive those who trespass against us; and lead us not into temptation, but deliver us from evil.",
+              meaning:
+                "The prayer taught by Jesus Christ — the foundational prayer of all Christian denominations.",
+            },
+            {
+              name: "Psalm 23 — The Lord is my Shepherd",
+              occasion: "Recited at deathbed, wake, and funeral service",
+              arabic: "The Lord is my shepherd; I shall not want...",
+              transliteration:
+                "The Lord is my shepherd; I shall not want. He maketh me to lie down in green pastures; He leadeth me beside the still waters. He restoreth my soul... Yea, though I walk through the valley of the shadow of death, I will fear no evil, for Thou art with me.",
+              meaning:
+                "A psalm of comfort and confidence in God's presence, especially at the time of death.",
+            },
+            {
+              name: "Committal Prayer",
+              occasion: "Said at graveside during burial",
+              arabic: "In sure and certain hope of the Resurrection...",
+              transliteration:
+                "In sure and certain hope of the resurrection to eternal life through our Lord Jesus Christ, we commend to Almighty God our brother/sister [Name], and we commit his/her body to the ground.",
+              meaning:
+                "The traditional Christian words of committal at the graveside, affirming the resurrection hope.",
+            },
+          ],
+          checklist: [
+            {
+              group: "⚡ Immediate",
+              items: [
+                "Call a priest for Last Rites if death is imminent (Catholic)",
+                "Pray together as a family at the bedside",
+                "Notify your church and pastor",
+                "Contact a funeral home",
+                "Notify close family and friends",
+              ],
+            },
+            {
+              group: "📋 Planning the Service",
+              items: [
+                "Meet with the priest/pastor to plan the funeral service",
+                "Choose scripture readings for the service",
+                "Select hymns and music",
+                "Arrange the eulogy speaker",
+                "Decide on burial or cremation",
+                "Choose the coffin or urn",
+              ],
+            },
+            {
+              group: "⛪ Day of the Funeral",
+              items: [
+                "Arrange flowers for the church and grave",
+                "Print the order of service / funeral program",
+                "Arrange transportation for the hearse and family",
+                "Confirm all speakers and musicians",
+                "Prepare reception venue after the burial",
+              ],
+            },
+            {
+              group: "🌿 After the Burial",
+              items: [
+                "Host the reception or meal for mourners",
+                "Send thank-you notes to those who helped",
+                "Order a headstone or grave marker",
+                "Arrange a memorial Mass or service on the anniversary",
+              ],
+            },
+          ],
+        },
+
+        sikhism: {
+          name: "Sikhism",
+          icon: "☬",
+          color: "#0284c7",
+          subtitle: "Antam Sanskaar — complete Sikh funeral guide",
+          tags: ["Antam Sanskaar", "Akhand Path", "Bhog", "Ardas", "Five Ks"],
+          intro: `In Sikhism, death is seen as a natural part of God's (Waheguru's) plan 
+        and a reunion with the divine. Sikhs believe in the transmigration of the soul 
+        and the ultimate goal of merging with Waheguru. 
+        Grief is natural but excessive mourning is discouraged as it goes against 
+        accepting Waheguru's Hukam (divine will). The Antam Sanskaar (last rites) 
+        center around prayers from the Guru Granth Sahib, cremation, 
+        and the Akhand Path (48-hour continuous reading of the Guru Granth Sahib).`,
+          facts: [
+            { label: "Burial type", value: "Cremation" },
+            { label: "Time frame", value: "Within 24–48 hours" },
+            { label: "Key ritual", value: "Antam Sanskaar + Akhand Path" },
+            { label: "Holy book", value: "Guru Granth Sahib" },
+            { label: "Five Ks", value: "Must be worn by deceased" },
+            { label: "Community", value: "Gurdwara leads all arrangements" },
+            { label: "Meal", value: "Langar served for all mourners" },
+          ],
+          procedures: [
+            {
+              title: "⚡ Immediate Actions",
+              icon: "🚨",
+              steps: [
+                {
+                  n: 1,
+                  t: "Recite Waheguru and Gurbani",
+                  d: "Begin reciting 'Waheguru, Waheguru' and Gurbani (hymns from the Guru Granth Sahib) immediately.",
+                },
+                {
+                  n: 2,
+                  t: "Ensure the Five Ks (Panj Kakars) are present",
+                  d: "The deceased must be dressed with: Kesh (uncut hair), Kara (steel bracelet), Kachera, Kirpan, and Kanga.",
+                },
+                {
+                  n: 3,
+                  t: "Contact the Gurdwara immediately",
+                  d: "The Gurdwara committee will coordinate all arrangements. The Granthi will guide all religious procedures.",
+                },
+                {
+                  n: 4,
+                  t: "Arrange for Akhand Path",
+                  d: "Arrange for the continuous 48-hour reading of the complete Guru Granth Sahib to begin.",
+                },
+              ],
+            },
+            {
+              title: "🛁 Preparation of the Body",
+              icon: "🌸",
+              steps: [
+                {
+                  n: 1,
+                  t: "Bathe the body",
+                  d: "The body is bathed by close family members of the same gender using clean water.",
+                },
+                {
+                  n: 2,
+                  t: "Dress in clean clothes with all Five Ks",
+                  d: "Dress in clean Punjabi clothes. Ensure all Panj Kakars are in place. No jewelry other than Kara.",
+                },
+                {
+                  n: 3,
+                  t: "Cover with white cloth",
+                  d: "The body is covered with a clean white cloth before being taken to the Gurdwara or home.",
+                },
+              ],
+            },
+            {
+              title: "🙏 Antam Sanskaar Ceremony",
+              icon: "📖",
+              steps: [
+                {
+                  n: 1,
+                  t: "Ardas (Sikh prayer) at the Gurdwara",
+                  d: "The community gathers for Ardas. The Granthi leads the prayer for the peace of the soul.",
+                },
+                {
+                  n: 2,
+                  t: "Recitation of Gurbani (Shabads)",
+                  d: "Specific Shabads related to death and the soul's journey are recited from the Guru Granth Sahib.",
+                },
+                {
+                  n: 3,
+                  t: "Hukamnama — divine command",
+                  d: "A random verse is read from the Guru Granth Sahib as the 'divine command' (Hukam) for the day.",
+                },
+                {
+                  n: 4,
+                  t: "Karah Prasad distribution",
+                  d: "Sacred sweet (Karah Prasad) is prepared and distributed to all present.",
+                },
+              ],
+            },
+            {
+              title: "🔥 Cremation",
+              icon: "🔥",
+              steps: [
+                {
+                  n: 1,
+                  t: "Procession to the cremation ground",
+                  d: "The family carries the body in procession. 'Waheguru, Waheguru' is chanted continuously.",
+                },
+                {
+                  n: 2,
+                  t: "Ardas before lighting the pyre",
+                  d: "A final Ardas is performed at the cremation ground before the pyre is lit.",
+                },
+                {
+                  n: 3,
+                  t: "Eldest son or senior member lights the pyre",
+                  d: "Traditionally the eldest son lights the funeral pyre while the family continues reciting Gurbani.",
+                },
+                {
+                  n: 4,
+                  t: "Asthi Visarjan — immersion of ashes",
+                  d: "Ashes are collected and immersed in a flowing river. Anandpur Sahib or local rivers are used.",
+                },
+              ],
+            },
+          ],
+          prayers: [
+            {
+              name: "Ardas — Sikh Prayer",
+              occasion: "Performed at every stage of the funeral proceedings",
+              arabic: "ਵਾਹਿਗੁਰੂ ਜੀ ਕਾ ਖਾਲਸਾ, ਵਾਹਿਗੁਰੂ ਜੀ ਕੀ ਫਤਹਿ",
+              transliteration: "Waheguru Ji Ka Khalsa, Waheguru Ji Ki Fateh",
+              meaning:
+                "The Khalsa belongs to Waheguru, victory belongs to Waheguru. Opening words of Ardas.",
+            },
+            {
+              name: "Sohila — Bedtime Prayer",
+              occasion:
+                "Recited at night near the deceased and during the funeral",
+              arabic: "ਸੋ ਦਰੁ ਤੇਰਾ ਕੇਹਾ, ਸੋ ਘਰੁ ਕੇਹਾ",
+              transliteration:
+                "So Dar Tera Keha, So Ghar Keha, Jit Beh Sarab Samale...",
+              meaning:
+                "What is that gate of yours, what is that house, in which you sit and take care of all. Kirtan Sohila — the evening prayer recited near the deceased.",
+            },
+            {
+              name: "Anand Sahib",
+              occasion: "Recited during the Antam Sanskaar and Bhog ceremony",
+              arabic: "ਅਨੰਦੁ ਭਇਆ ਮੇਰੀ ਮਾਏ ਸਤਿਗੁਰੂ ਮੈ ਪਾਇਆ",
+              transliteration:
+                "Anand Bha-i-aa Meri Maa-ay Satguroo Mai Paa-i-aa",
+              meaning:
+                "I am in ecstasy, O my mother, for I have found my True Guru. A hymn of bliss recited during Sikh ceremonies.",
+            },
+          ],
+          checklist: [
+            {
+              group: "⚡ Immediate",
+              items: [
+                "Recite Waheguru and Gurbani continuously",
+                "Ensure all Five Ks (Panj Kakars) are present on the body",
+                "Contact the Gurdwara committee immediately",
+                "Arrange for the Akhand Path (48-hour reading) to begin",
+                "Notify family and Sikh community",
+              ],
+            },
+            {
+              group: "🛁 Body Preparation",
+              items: [
+                "Bathe the body (same-gender family members)",
+                "Dress in clean clothes with all Five Ks",
+                "Cover with a clean white cloth",
+                "Transport to Gurdwara or arrange home ceremony",
+              ],
+            },
+            {
+              group: "🙏 Ceremony",
+              items: [
+                "Confirm Granthi availability for Antam Sanskaar",
+                "Arrange for Karah Prasad preparation",
+                "Coordinate community for Ardas",
+                "Confirm Akhand Path readers schedule (48 hours)",
+              ],
+            },
+            {
+              group: "🔥 Cremation and After",
+              items: [
+                "Book cremation ground",
+                "Arrange pallbearers for the procession",
+                "Collect ashes for Asthi Visarjan",
+                "Arrange travel to river for ash immersion",
+                "Plan Bhog ceremony (completion of Akhand Path)",
+                "Arrange Langar meal for the community",
+              ],
+            },
+          ],
+        },
+
+        buddhism: {
+          name: "Buddhism",
+          icon: "☸️",
+          color: "#dc2626",
+          subtitle: "Buddhist funeral rites, merit-making and mourning guide",
+          tags: [
+            "Merit-making",
+            "Chanting",
+            "Cremation",
+            "Dana",
+            "7th day ceremony",
+          ],
+          intro: `In Buddhism, death is understood as a transition — the consciousness 
+        continues its journey based on the karma accumulated in this and previous lives. 
+        The goal is liberation (Nirvana) from the cycle of rebirth. 
+        Buddhist funeral customs vary significantly between Theravada (Sri Lanka, Thailand, Myanmar), 
+        Mahayana (China, Japan, Korea, Vietnam), and Vajrayana (Tibet, Bhutan) traditions. 
+        The common themes across all traditions are: maintaining peace at the time of death, 
+        inviting monks for chanting, and performing merit-making activities for the deceased.`,
+          facts: [
+            { label: "Burial type", value: "Cremation (most common)" },
+            { label: "Key practice", value: "Merit transfer (Pattidana)" },
+            { label: "Monks", value: "Essential for all ceremonies" },
+            { label: "7th day", value: "Merit ceremony for deceased" },
+            { label: "Annual rite", value: "Merit ceremony on anniversary" },
+            { label: "Tradition", value: "Theravada / Mahayana / Vajrayana" },
+            { label: "Peace", value: "Critical at time of death" },
+          ],
+          procedures: [
+            {
+              title: "⚡ Immediate Actions",
+              icon: "🚨",
+              steps: [
+                {
+                  n: 1,
+                  t: "Maintain absolute calm and peace",
+                  d: "Buddhism teaches that the state of mind at death is crucial. Keep the environment completely peaceful. No loud crying.",
+                },
+                {
+                  n: 2,
+                  t: "Invite monks to recite suttas immediately",
+                  d: "Contact your local Buddhist temple. Monks should begin chanting as soon as possible to guide the consciousness.",
+                },
+                {
+                  n: 3,
+                  t: "Allow the body to rest undisturbed",
+                  d: "Many traditions recommend not moving the body for at least 4–8 hours to allow the consciousness to depart peacefully.",
+                },
+                {
+                  n: 4,
+                  t: "Set up a candle, incense and flower altar",
+                  d: "Light a candle and incense near the head of the deceased. Place fresh flowers as an offering.",
+                },
+              ],
+            },
+            {
+              title: "🙏 Chanting Ceremonies",
+              icon: "📿",
+              steps: [
+                {
+                  n: 1,
+                  t: "Invite monks for multi-day chanting",
+                  d: "Monks chant suttas over 3–7 evenings. Key suttas include Metta Sutta, Mangala Sutta, and Abhidhamma.",
+                },
+                {
+                  n: 2,
+                  t: "Merit transfer (Pattidana) ceremony",
+                  d: "Family pours water from a vessel while monks chant. This symbolic act transfers merit to the deceased.",
+                },
+                {
+                  n: 3,
+                  t: "Offer Dana (giving) to the monks",
+                  d: "Give food, robes, or monetary donations to the monks. This generates powerful merit for the deceased.",
+                },
+              ],
+            },
+            {
+              title: "🔥 Cremation Ceremony",
+              icon: "🔥",
+              steps: [
+                {
+                  n: 1,
+                  t: "Monks determine auspicious timing",
+                  d: "The senior monk or temple will advise on the appropriate date and time for the cremation.",
+                },
+                {
+                  n: 2,
+                  t: "Monks lead the cremation ceremony",
+                  d: "Suttas are chanted throughout. The monks lead the proceedings as the family follows along.",
+                },
+                {
+                  n: 3,
+                  t: "Senior family member lights the pyre or presses the button",
+                  d: "At the moment of cremation, monks chant powerfully to support the consciousness of the deceased.",
+                },
+                {
+                  n: 4,
+                  t: "Enshrine or scatter the ashes",
+                  d: "Ashes may be placed in a stupa (reliquary), scattered at sea or in nature, or buried.",
+                },
+              ],
+            },
+          ],
+          prayers: [
+            {
+              name: "Metta Sutta — Loving Kindness",
+              occasion: "Chanted by monks during funeral ceremonies",
+              arabic: "Karaniya metta suttaṃ — yadā pi sukhaṃ iccheyya...",
+              transliteration:
+                "Sabbe satta sukhi hontu, Sabbe satta averā hontu, Sabbe satta abyāpajjhā hontu, Sabbe satta anīghā hontu, Sabbe satta sukhī attānaṃ pariharantu.",
+              meaning:
+                "May all beings be happy. May all beings be free from enmity. May all beings be free from suffering. May all beings be free from anxiety. May all beings sustain themselves in happiness.",
+            },
+            {
+              name: "Transference of Merit",
+              occasion: "Recited while pouring water — the core mourning act",
+              arabic: "Idaṃ vo ñātinaṃ hotu, sukhitā hontu ñātayo...",
+              transliteration: "Idaṃ vo ñātinaṃ hotu, sukhitā hontu ñātayo",
+              meaning:
+                "May this (merit) be for our relatives. May our relatives be happy. The verse recited while pouring water to transfer merit to the deceased.",
+            },
+            {
+              name: "Ti-Ratana — Three Jewels",
+              occasion: "Recited at all Buddhist ceremonies",
+              arabic: "Buddhaṃ saraṇaṃ gacchāmi...",
+              transliteration:
+                "Buddhaṃ saraṇaṃ gacchāmi, Dhammaṃ saraṇaṃ gacchāmi, Saṅghaṃ saraṇaṃ gacchāmi",
+              meaning:
+                "I take refuge in the Buddha. I take refuge in the Dhamma (teachings). I take refuge in the Sangha (community of monks).",
+            },
+          ],
+          checklist: [
+            {
+              group: "⚡ Immediate",
+              items: [
+                "Maintain a calm and peaceful environment",
+                "Contact your local Buddhist temple immediately",
+                "Invite monks to begin chanting suttas",
+                "Set up a candle, incense and flower altar",
+                "Allow the body to rest undisturbed for 4–8 hours",
+              ],
+            },
+            {
+              group: "🙏 Chanting Ceremonies",
+              items: [
+                "Arrange monks for 3–7 evenings of chanting",
+                "Prepare Dana (food or robes) to offer to monks",
+                "Set up water vessel for merit transfer (Pattidana)",
+                "Invite family and community to the chanting sessions",
+              ],
+            },
+            {
+              group: "🔥 Cremation",
+              items: [
+                "Confirm auspicious date with the monks",
+                "Book cremation ground or facility",
+                "Arrange monks to lead the cremation ceremony",
+                "Prepare incense, flowers and candles for the ceremony",
+                "Decide on ashes — stupa, scattering, or burial",
+              ],
+            },
+            {
+              group: "📅 Post Cremation",
+              items: [
+                "Arrange 7th day merit ceremony with monks",
+                "Offer Dana to monks on behalf of the deceased",
+                "Arrange 50th day merit ceremony",
+                "Arrange 100th day merit ceremony",
+                "Plan annual death anniversary merit ceremony",
+              ],
+            },
+          ],
+        },
+      }; // end RELIGION_DATA
+
+      // ============================================================
+      // PAGE LOGIC
+      // ============================================================
+
+      let currentReligion = null;
+      let checklistState = {};
+
+      function initPage() {
+        const param = getParam("r");
+        if (param && RELIGION_DATA[param]) {
+          loadReligion(param);
+        }
+        // else: show allReligionsView (default)
+      }
+
+      function loadReligion(religion) {
+        const data = RELIGION_DATA[religion];
+        if (!data) return;
+        currentReligion = religion;
+
+        // Hide all religions grid, show single view
+        document.getElementById("allReligionsView").style.display = "none";
+        document.getElementById("singleReligionView").style.display = "block";
+        document.getElementById("tabBar").style.display = "block";
+
+        // Update hero
+        document.getElementById("heroIcon").textContent = data.icon;
+        document.getElementById("heroTitle").textContent =
+          data.name + " — Emergency Guide";
+        document.getElementById("heroSubtitle").textContent = data.subtitle;
+
+        // Tags
+        document.getElementById("heroTags").innerHTML = data.tags
+          .map((tag) => `<span class="guide-tag">${tag}</span>`)
+          .join("");
+
+        // Update page title
+        document.title = `${data.name} Guide — Religious Emergency Help`;
+
+        // Render all panels
+        renderOverview(data);
+        renderProcedures(data);
+        renderPrayers(data);
+        renderChecklist(data);
+
+        // Tab click handlers
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+      }
+
+      function switchTab(tab) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) =>
+            p.classList.toggle("active", p.id === "panel-" + tab),
+          );
+      }
+
+      // ---- Overview ----
+      function renderOverview(data) {
+        document.getElementById("overviewIntro").textContent = data.intro;
+        document.getElementById("keyFacts").innerHTML = `
+      <h3>Quick Facts</h3>
+      ${data.facts
+        .map(
+          (f) => `
+        <div class="fact-row">
+          <span class="fact-label">${f.label}</span>
+          <span class="fact-value">${f.value}</span>
+        </div>
+      `,
+        )
+        .join("")}
+      <div style="margin-top:var(--space-4);">
+        <a href="emergency.html?r=${currentReligion}"
+           class="btn btn-emergency btn-full">
+          ⚡ View Emergency Steps
+        </a>
+      </div>
+    `;
+      }
+
+      // ---- Procedures ----
+      function renderProcedures(data) {
+        const html = data.procedures
+          .map(
+            (section) => `
+      <div class="procedures-section">
+        <h2 class="procedures-section-title">
+          <span class="icon">${section.icon}</span>
+          ${section.title}
+        </h2>
+        <div class="steps-list">
+          ${section.steps
+            .map(
+              (step) => `
+            <div class="step-item">
+              <div class="step-number"
+                style="background:${data.color}">${step.n}</div>
+              <div class="step-content">
+                <div class="step-title">${step.t}</div>
+                <div class="step-description">${step.d}</div>
+              </div>
+            </div>
+          `,
+            )
+            .join("")}
+        </div>
+      </div>
+    `,
+          )
+          .join("");
+        document.getElementById("proceduresContent").innerHTML = html;
+      }
+
+      // ---- Prayers ----
+      function renderPrayers(data) {
+        const html = data.prayers
+          .map(
+            (p) => `
+      <div class="prayer-card">
+        <div class="prayer-name">${p.name}</div>
+        <div class="prayer-occasion">📍 ${p.occasion}</div>
+        <div class="prayer-text">${p.arabic}</div>
+        <p style="font-size:var(--font-size-sm);
+                  color:var(--color-text-secondary);
+                  margin-bottom:var(--space-3);
+                  font-style:italic;">
+          ${p.transliteration}
+        </p>
+        <div class="prayer-meaning">💡 ${p.meaning}</div>
+      </div>
+    `,
+          )
+          .join("");
+        document.getElementById("prayersContent").innerHTML = html;
+      }
+
+      // ---- Checklist ----
+      function renderChecklist(data) {
+        // Load saved state from localStorage
+        const saved = localStorage.getItem(`checklist_${currentReligion}`);
+        checklistState = saved ? JSON.parse(saved) : {};
+
+        // Count total items
+        let totalItems = 0;
+        data.checklist.forEach((g) => (totalItems += g.items.length));
+        let checkedCount = Object.values(checklistState).filter(Boolean).length;
+
+        const html = `
+      <div style="margin-bottom:var(--space-6);">
+        <div style="display:flex; justify-content:space-between;
+                    align-items:center; margin-bottom:var(--space-2);">
+          <span style="font-size:var(--font-size-sm);
+                       font-weight:600;
+                       color:var(--color-text-secondary);">
+            Progress: ${checkedCount} / ${totalItems} completed
+          </span>
+          <span style="font-size:var(--font-size-sm);
+                       color:var(--color-text-muted);">
+            ${Math.round((checkedCount / totalItems) * 100)}%
+          </span>
+        </div>
+        <div class="checklist-progress">
+          <div class="checklist-progress-bar" id="progressBar"
+            style="width:${Math.round((checkedCount / totalItems) * 100)}%">
+          </div>
+        </div>
+      </div>
+      ${data.checklist
+        .map(
+          (group) => `
+        <div class="checklist-group">
+          <div class="checklist-group-title">${group.group}</div>
+          ${group.items
+            .map((item, idx) => {
+              const key = `${group.group}_${idx}`;
+              const checked = checklistState[key] || false;
+              return `
+              <div class="checklist-item ${checked ? "checked" : ""}"
+                   onclick="toggleCheck('${key}', this)">
+                <input type="checkbox"
+                  id="chk_${key}"
+                  ${checked ? "checked" : ""}
+                  onclick="event.stopPropagation();"
+                  onchange="toggleCheck('${key}',
+                    this.closest('.checklist-item'))">
+                <label for="chk_${key}">${item}</label>
+              </div>
+            `;
+            })
+            .join("")}
+        </div>
+      `,
+        )
+        .join("")}
+    `;
+        document.getElementById("checklistContent").innerHTML = html;
+      }
+
+      function toggleCheck(key, el) {
+        checklistState[key] = !checklistState[key];
+
+        // Save to localStorage
+        localStorage.setItem(
+          `checklist_${currentReligion}`,
+          JSON.stringify(checklistState),
+        );
+
+        // Update UI
+        el.classList.toggle("checked", checklistState[key]);
+        const checkbox = el.querySelector('input[type="checkbox"]');
+        if (checkbox) checkbox.checked = checklistState[key];
+
+        // Update progress bar
+        const data = RELIGION_DATA[currentReligion];
+        let total = 0;
+        data.checklist.forEach((g) => (total += g.items.length));
+        const done = Object.values(checklistState).filter(Boolean).length;
+        const pct = Math.round((done / total) * 100);
+
+        const bar = document.getElementById("progressBar");
+        if (bar) bar.style.width = pct + "%";
+
+        // Update counter text
+        const counter = document.querySelector(
+          '#panel-checklist [style*="Progress"]',
+        );
+        if (counter) {
+          counter.textContent = `Progress: ${done} / ${total} completed`;
+        }
+      }
+
+      function resetChecklist() {
+        checklistState = {};
+        localStorage.removeItem(`checklist_${currentReligion}`);
+        renderChecklist(RELIGION_DATA[currentReligion]);
+        showToast("Checklist reset.");
+      }
+
+      function handleDownloadPDF() {
+        showToast("PDF download will be available in Part 14!");
+      }
+
+      // Start the page
+      initPage();
+    </script>
+  </body>
+</html>
