@@ -308,6 +308,37 @@
     </style>
   </head>
   <body>
+    <!-- PWA Install Banner -->
+    <div
+      id="installBanner"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        z-index: 9998;
+      "
+    >
+      <button
+        id="installBtn"
+        style="
+          background: #dc2626;
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          border-radius: 50px;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+      >
+        📲 Install App
+      </button>
+    </div>
     <!-- ===================== NAVBAR ===================== -->
     <nav class="navbar">
       <div class="container">
@@ -674,6 +705,39 @@
           setTimeout(() => (window.location.href = "index.html"), 1000);
         }
       };
+    </script>
+    <script>
+      // PWA Install prompt
+      let installPrompt = null;
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        installPrompt = e;
+
+        // Show install button
+        document.getElementById("installBanner").style.display = "block";
+      });
+
+      document
+        .getElementById("installBtn")
+        ?.addEventListener("click", async () => {
+          if (!installPrompt) return;
+
+          installPrompt.prompt();
+          const { outcome } = await installPrompt.userChoice;
+
+          if (outcome === "accepted") {
+            showToast("App installed! 🎉", "success");
+            document.getElementById("installBanner").style.display = "none";
+          }
+          installPrompt = null;
+        });
+
+      // Hide banner if already installed
+      window.addEventListener("appinstalled", () => {
+        document.getElementById("installBanner").style.display = "none";
+        showToast("App installed successfully!", "success");
+      });
     </script>
   </body>
 </html>

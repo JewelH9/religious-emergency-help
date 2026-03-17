@@ -871,3 +871,27 @@ textarea {
 [data-i18n-placeholder] {
   transition: opacity 0.15s ease;
 }
+
+/* ---- Online / Offline Indicator ---- */
+.offline-indicator {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  right: 0;
+  background: #92400e;
+  color: #fef3c7;
+  text-align: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  z-index: 999;
+  transform: translateY(-100%);
+  transition: transform var(--transition-slow);
+}
+.offline-indicator.visible {
+  transform: translateY(0);
+}
+.online-indicator {
+  background: #166534;
+  color: #dcfce7;
+}

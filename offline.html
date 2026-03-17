@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>You are Offline — Religious Emergency Help</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .offline-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-4);
+        background: var(--color-bg-dark);
+        color: #ffffff;
+      }
+      .offline-card {
+        text-align: center;
+        max-width: 480px;
+      }
+      .offline-icon {
+        font-size: 5rem;
+        margin-bottom: var(--space-6);
+      }
+      .offline-title {
+        font-size: var(--font-size-3xl);
+        font-weight: 800;
+        margin-bottom: var(--space-4);
+        color: #ffffff;
+      }
+      .offline-subtitle {
+        color: #94a3b8;
+        font-size: var(--font-size-lg);
+        line-height: 1.7;
+        margin-bottom: var(--space-8);
+      }
+      .offline-links {
+        display: flex;
+        gap: var(--space-4);
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: var(--space-8);
+      }
+      .offline-tip {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--font-size-sm);
+        color: #64748b;
+        line-height: 1.6;
+      }
+      .offline-tip strong {
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-page">
+      <div class="offline-card">
+        <div class="offline-icon">📴</div>
+        <h1 class="offline-title">You Are Offline</h1>
+        <p class="offline-subtitle">
+          No internet connection detected. You can still access pages you've
+          visited before — they are saved on your device.
+        </p>
+        <div class="offline-links">
+          <a href="emergency.html" class="btn btn-emergency btn-lg">
+            ⚡ Emergency Help
+          </a>
+          <a
+            href="index.html"
+            class="btn btn-secondary btn-lg"
+            style="color: #ffffff; border-color: rgba(255, 255, 255, 0.2)"
+          >
+            Go to Homepage
+          </a>
+        </div>
+        <div class="offline-tip">
+          <strong>Tip:</strong> The Emergency Help page, all religion guides,
+          and search work offline after your first visit. Your bookmarks sync
+          automatically when you reconnect.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

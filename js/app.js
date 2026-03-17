@@ -129,4 +129,30 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileNav();
   setActiveNav();
   syncAuthNav();
+  // ---- Online / Offline status indicator ----
+  function initNetworkStatus() {
+    const indicator = document.createElement("div");
+    indicator.className = "offline-indicator";
+    indicator.id = "networkIndicator";
+    document.body.appendChild(indicator);
+
+    function updateStatus() {
+      if (!navigator.onLine) {
+        indicator.textContent = "📴 You are offline — showing cached content";
+        indicator.classList.add("visible");
+        indicator.classList.remove("online-indicator");
+      } else {
+        indicator.textContent = "✅ Back online";
+        indicator.classList.add("visible", "online-indicator");
+        setTimeout(() => {
+          indicator.classList.remove("visible");
+        }, 3000);
+      }
+    }
+
+    window.addEventListener("offline", updateStatus);
+    window.addEventListener("online", updateStatus);
+  }
+
+  initNetworkStatus();
 });
