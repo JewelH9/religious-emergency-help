@@ -1205,6 +1205,16 @@
 
         // Update URL without reload (for bookmarking)
         history.replaceState(null, "", `emergency.html?r=${religion}`);
+
+        // Dispatch event so module script can check bookmark state
+        window.dispatchEvent(
+          new CustomEvent("religionSelected", {
+            detail: {
+              guideId: religion,
+              guideName: GUIDES[religion].name,
+            },
+          }),
+        );
       }
 
       function renderGuide(religion, section) {
@@ -1314,6 +1324,71 @@
           setTimeout(() => (window.location.href = "index.html"), 1000);
         }
       };
+    </script>
+    <script type="module">
+      import { initAuthObserver } from "./js/auth.js";
+      import { handleSaveBookmark, checkIfBookmarked } from "./js/bookmarks.js";
+      import { auth } from "./js/firebase-config.js";
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+      initAuthObserver();
+
+      // Update bookmark button state when religion is selected
+      window.addEventListener("religionSelected", async (e) => {
+        const { guideId, guideName } = e.detail;
+        const btn = document.getElementById("bookmarkBtn");
+        if (!btn) return;
+
+        const saved = await checkIfBookmarked(guideId);
+        updateBookmarkBtn(btn, saved);
+      });
+
+      // Make handleBookmark available globally
+      window.handleBookmark = async function () {
+        if (!activeReligion) return;
+
+        const btn = document.getElementById("bookmarkBtn");
+        const guide = GUIDES[activeReligion];
+        const user = localStorage.getItem("userEmail");
+
+        if (!user) {
+          showToast("Please sign in to save bookmarks");
+          setTimeout(() => (window.location.href = "login.html"), 1500);
+          return;
+        }
+
+        btn.disabled = true;
+
+        const result = await handleSaveBookmark(
+          activeReligion,
+          guide.name,
+          guide.icon,
+        );
+
+        if (result.success) {
+          updateBookmarkBtn(btn, true);
+          showToast(`${guide.name} saved to bookmarks!`);
+        } else if (result.reason === "not-logged-in") {
+          showToast("Please sign in to save bookmarks");
+          setTimeout(() => (window.location.href = "login.html"), 1500);
+        } else {
+          showToast("Failed to save. Please try again.");
+        }
+
+        btn.disabled = false;
+      };
+
+      function updateBookmarkBtn(btn, isSaved) {
+        if (isSaved) {
+          btn.textContent = "✅ Saved";
+          btn.classList.remove("btn-secondary");
+          btn.classList.add("btn-ghost");
+        } else {
+          btn.textContent = "🔖 Save Guide";
+          btn.classList.add("btn-secondary");
+          btn.classList.remove("btn-ghost");
+        }
+      }
     </script>
   </body>
 </html>

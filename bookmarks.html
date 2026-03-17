@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Bookmarks — Religious Emergency Help</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .bookmarks-page {
+        padding-top: calc(var(--nav-height) + var(--space-10));
+        padding-bottom: var(--space-16);
+        min-height: 100vh;
+      }
+
+      /* ---- Page Header ---- */
+      .page-header {
+        margin-bottom: var(--space-10);
+      }
+      .page-header-inner {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+      }
+      .page-title {
+        font-size: var(--font-size-3xl);
+        font-weight: 800;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-2);
+      }
+      .page-subtitle {
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-lg);
+      }
+      .bookmark-count-badge {
+        background: var(--color-primary-bg);
+        color: var(--color-primary);
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-full);
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        align-self: flex-start;
+        margin-top: var(--space-2);
+      }
+
+      /* ---- States ---- */
+      .state-container {
+        text-align: center;
+        padding: var(--space-16) var(--space-4);
+      }
+      .state-icon {
+        font-size: 4rem;
+        margin-bottom: var(--space-6);
+        display: block;
+      }
+      .state-title {
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-3);
+      }
+      .state-subtitle {
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-lg);
+        max-width: 420px;
+        margin: 0 auto var(--space-8);
+        line-height: 1.6;
+      }
+
+      /* ---- Bookmark Grid ---- */
+      .bookmarks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: var(--space-6);
+      }
+
+      /* ---- Bookmark Card ---- */
+      .bookmark-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-6);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        transition: all var(--transition-slow);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.3s ease forwards;
+      }
+      .bookmark-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--card-color, var(--color-primary));
+      }
+      .bookmark-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+      }
+
+      .bookmark-card-top {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+      .bookmark-icon {
+        font-size: 2.5rem;
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: color-mix(
+          in srgb,
+          var(--card-color, var(--color-primary)) 10%,
+          transparent
+        );
+      }
+      .bookmark-card-info {
+        flex: 1;
+      }
+      .bookmark-card-name {
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-1);
+      }
+      .bookmark-card-date {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+      }
+
+      .bookmark-card-actions {
+        display: flex;
+        gap: var(--space-3);
+        margin-top: auto;
+      }
+
+      /* Remove button with animation */
+      .btn-remove {
+        background: transparent;
+        color: var(--color-text-muted);
+        border: 1px solid var(--color-border);
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        cursor: pointer;
+        transition: all var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+      }
+      .btn-remove:hover {
+        color: var(--color-emergency);
+        border-color: var(--color-emergency);
+        background: #fef2f2;
+      }
+
+      /* Card removing animation */
+      .bookmark-card.removing {
+        opacity: 0;
+        transform: scale(0.95) translateY(-4px);
+        transition: all 0.3s ease;
+      }
+
+      /* ---- Not logged in state ---- */
+      .login-prompt {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: var(--space-12) var(--space-8);
+        text-align: center;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+      .login-prompt-icon {
+        font-size: 3rem;
+        margin-bottom: var(--space-4);
+      }
+      .login-prompt h2 {
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        margin-bottom: var(--space-3);
+      }
+      .login-prompt p {
+        color: var(--color-text-secondary);
+        margin-bottom: var(--space-6);
+        line-height: 1.6;
+      }
+
+      /* ---- Quick Add Section ---- */
+      .quick-add-section {
+        margin-top: var(--space-12);
+        padding-top: var(--space-10);
+        border-top: 2px solid var(--color-border);
+      }
+      .quick-add-title {
+        font-size: var(--font-size-2xl);
+        font-weight: 700;
+        margin-bottom: var(--space-2);
+      }
+      .quick-add-subtitle {
+        color: var(--color-text-secondary);
+        margin-bottom: var(--space-6);
+      }
+      .quick-add-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: var(--space-4);
+      }
+      .quick-add-card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--transition);
+      }
+      .quick-add-card:hover {
+        border-color: var(--color-primary);
+        transform: translateY(-2px);
+      }
+      .quick-add-card .q-icon {
+        font-size: 2rem;
+        margin-bottom: var(--space-2);
+      }
+      .quick-add-card .q-name {
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text-primary);
+        margin-bottom: var(--space-1);
+      }
+      .quick-add-card .q-saved {
+        font-size: var(--font-size-xs);
+        color: var(--color-success);
+        font-weight: 600;
+        display: none;
+      }
+      .quick-add-card.is-saved .q-saved {
+        display: block;
+      }
+      .quick-add-card.is-saved .q-action {
+        display: none;
+      }
+      .quick-add-card .q-action {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+      }
+
+      @media (max-width: 480px) {
+        .bookmarks-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="nav-brand">
+          <div class="nav-brand-icon">✚</div>
+          <span>Emergency Help</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html" data-i18n="nav.home">Home</a>
+          <a href="emergency.html" data-i18n="nav.emergency">Emergency</a>
+          <a href="religion.html" data-i18n="nav.religions">Religions</a>
+          <a href="search.html" data-i18n="nav.search">Search</a>
+          <a href="bookmarks.html" data-i18n="nav.bookmarks" class="active">
+            Bookmarks
+          </a>
+          <a href="emergency.html" class="nav-emergency-btn">⚡ Emergency</a>
+        </div>
+        <div class="nav-actions">
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="hi">हि</button>
+            <button class="lang-btn" data-lang="bn">বাং</button>
+          </div>
+          <a href="login.html" class="btn btn-secondary btn-sm" id="authBtn">
+            Sign In
+          </a>
+        </div>
+        <button class="nav-toggle" id="navToggle">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ===== MAIN ===== -->
+    <main class="bookmarks-page">
+      <div class="container">
+        <!-- Page header -->
+        <div class="page-header">
+          <div class="page-header-inner">
+            <div>
+              <h1 class="page-title" data-i18n="bookmarks.title">
+                My Bookmarks
+              </h1>
+              <p class="page-subtitle">Your saved religious emergency guides</p>
+            </div>
+            <div
+              class="bookmark-count-badge"
+              id="countBadge"
+              style="display: none"
+            >
+              0 saved
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic content area -->
+        <div id="mainContent">
+          <!-- Loading state -->
+          <div class="state-container" id="loadingState">
+            <div class="spinner" style="margin: 0 auto"></div>
+            <p
+              style="margin-top: var(--space-4); color: var(--color-text-muted)"
+            >
+              Loading your bookmarks...
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Add Section (always visible when logged in) -->
+        <div
+          class="quick-add-section"
+          id="quickAddSection"
+          style="display: none"
+        >
+          <h2 class="quick-add-title">Add a Guide</h2>
+          <p class="quick-add-subtitle">
+            Quickly bookmark any religion guide for fast access
+          </p>
+          <div class="quick-add-grid" id="quickAddGrid"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script src="js/app.js"></script>
+    <script type="module">
+      import { auth } from "./js/firebase-config.js";
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import {
+        loadUserBookmarks,
+        handleRemoveBookmark,
+        handleSaveBookmark,
+        checkIfBookmarked,
+      } from "./js/bookmarks.js";
+      import { initAuthObserver } from "./js/auth.js";
+
+      initAuthObserver();
+
+      // Religion metadata for quick-add cards
+      const RELIGIONS = [
+        { id: "islam", name: "Islam", icon: "☪️", color: "#059669" },
+        { id: "hinduism", name: "Hinduism", icon: "🕉️", color: "#d97706" },
+        {
+          id: "christianity",
+          name: "Christianity",
+          icon: "✝️",
+          color: "#7c3aed",
+        },
+        { id: "sikhism", name: "Sikhism", icon: "☬", color: "#0284c7" },
+        { id: "buddhism", name: "Buddhism", icon: "☸️", color: "#dc2626" },
+      ];
+
+      // ---- Listen for auth state ----
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          showNotLoggedIn();
+          return;
+        }
+        await loadPage(user);
+      });
+
+      // ---- Load the full page ----
+      async function loadPage(user) {
+        const result = await loadUserBookmarks();
+
+        if (!result.success) {
+          showError();
+          return;
+        }
+
+        const bookmarks = result.data;
+
+        // Update count badge
+        const badge = document.getElementById("countBadge");
+        badge.style.display = "block";
+        badge.textContent = `${bookmarks.length} saved`;
+
+        // Show bookmarks or empty state
+        if (bookmarks.length === 0) {
+          showEmptyState();
+        } else {
+          showBookmarks(bookmarks);
+        }
+
+        // Always show quick-add section
+        await buildQuickAdd(bookmarks);
+      }
+
+      // ---- Render bookmark cards ----
+      function showBookmarks(bookmarks) {
+        // Sort by saved date — newest first
+        bookmarks.sort((a, b) => {
+          const ta = a.savedAt?.toDate?.() || new Date(0);
+          const tb = b.savedAt?.toDate?.() || new Date(0);
+          return tb - ta;
+        });
+
+        const html = `
+        <div class="bookmarks-grid" id="bookmarksGrid">
+          ${bookmarks.map((bm) => buildBookmarkCard(bm)).join("")}
+        </div>
+      `;
+        document.getElementById("mainContent").innerHTML = html;
+      }
+
+      // ---- Build a single bookmark card ----
+      function buildBookmarkCard(bm) {
+        const religion = RELIGIONS.find((r) => r.id === bm.guideId) || {};
+        const color = religion.color || "#1e40af";
+        const date = bm.savedAt?.toDate
+          ? bm.savedAt.toDate().toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })
+          : "Recently saved";
+
+        return `
+        <div class="bookmark-card"
+             id="card-${bm.guideId}"
+             style="--card-color: ${color}">
+          <div class="bookmark-card-top">
+            <div class="bookmark-icon">${bm.guideIcon || religion.icon || "📖"}</div>
+            <div class="bookmark-card-info">
+              <div class="bookmark-card-name">${bm.guideName}</div>
+              <div class="bookmark-card-date">Saved on ${date}</div>
+            </div>
+          </div>
+          <div class="bookmark-card-actions">
+            <a href="religion.html?r=${bm.guideId}"
+               class="btn btn-primary btn-sm" style="flex:1;">
+              📖 Open Guide
+            </a>
+            <a href="emergency.html?r=${bm.guideId}"
+               class="btn btn-emergency btn-sm">
+              ⚡ Emergency
+            </a>
+            <button class="btn-remove"
+              onclick="removeCard('${bm.guideId}', '${bm.guideName}')">
+              🗑️
+            </button>
+          </div>
+        </div>
+      `;
+      }
+
+      // ---- Remove bookmark ----
+      window.removeCard = async function (guideId, guideName) {
+        const card = document.getElementById(`card-${guideId}`);
+
+        // Animate out
+        card.classList.add("removing");
+
+        // Wait for animation then remove from DOM
+        setTimeout(async () => {
+          const result = await handleRemoveBookmark(guideId);
+
+          if (result.success) {
+            card.remove();
+            showToast(`${guideName} removed from bookmarks`);
+
+            // Update count
+            const grid = document.getElementById("bookmarksGrid");
+            const cards = grid ? grid.querySelectorAll(".bookmark-card") : [];
+            const badge = document.getElementById("countBadge");
+            badge.textContent = `${cards.length} saved`;
+
+            // Show empty state if no more bookmarks
+            if (cards.length === 0) {
+              showEmptyState();
+            }
+
+            // Update quick-add card status
+            const qCard = document.getElementById(`quick-${guideId}`);
+            if (qCard) {
+              qCard.classList.remove("is-saved");
+            }
+          } else {
+            card.classList.remove("removing");
+            showToast("Failed to remove bookmark. Please try again.");
+          }
+        }, 300);
+      };
+
+      // ---- Build quick-add grid ----
+      async function buildQuickAdd(existingBookmarks) {
+        const savedIds = existingBookmarks.map((b) => b.guideId);
+        const section = document.getElementById("quickAddSection");
+        const grid = document.getElementById("quickAddGrid");
+
+        section.style.display = "block";
+
+        grid.innerHTML = RELIGIONS.map(
+          (r) => `
+        <div class="quick-add-card ${savedIds.includes(r.id) ? "is-saved" : ""}"
+             id="quick-${r.id}"
+             onclick="quickAdd('${r.id}', '${r.name}', '${r.icon}')">
+          <div class="q-icon">${r.icon}</div>
+          <div class="q-name">${r.name}</div>
+          <div class="q-saved">✅ Saved</div>
+          <div class="q-action">+ Bookmark</div>
+        </div>
+      `,
+        ).join("");
+      }
+
+      // ---- Quick add a bookmark ----
+      window.quickAdd = async function (guideId, guideName, guideIcon) {
+        const card = document.getElementById(`quick-${guideId}`);
+
+        // Already saved — do nothing
+        if (card.classList.contains("is-saved")) {
+          showToast(`${guideName} is already in your bookmarks.`);
+          return;
+        }
+
+        // Save to Firestore
+        const result = await handleSaveBookmark(guideId, guideName, guideIcon);
+
+        if (result.success) {
+          card.classList.add("is-saved");
+          showToast(`${guideName} saved to bookmarks!`);
+
+          // Add card to the grid dynamically
+          const grid = document.getElementById("bookmarksGrid");
+          if (grid) {
+            const newBm = {
+              guideId,
+              guideName,
+              guideIcon,
+              savedAt: null,
+            };
+            grid.insertAdjacentHTML("afterbegin", buildBookmarkCard(newBm));
+          } else {
+            // Was empty state — reload the section
+            const reloaded = await loadUserBookmarks();
+            if (reloaded.success) showBookmarks(reloaded.data);
+          }
+
+          // Update count
+          const badge = document.getElementById("countBadge");
+          const cards = document.querySelectorAll(".bookmark-card");
+          badge.textContent = `${cards.length} saved`;
+          badge.style.display = "block";
+        } else if (result.reason === "not-logged-in") {
+          showToast("Please sign in to save bookmarks.");
+          setTimeout(() => (window.location.href = "login.html"), 1500);
+        } else {
+          showToast("Failed to save bookmark. Please try again.");
+        }
+      };
+
+      // ---- States ----
+      function showNotLoggedIn() {
+        document.getElementById("mainContent").innerHTML = `
+        <div class="login-prompt">
+          <div class="login-prompt-icon">🔖</div>
+          <h2>Save Your Guides</h2>
+          <p>
+            Sign in to bookmark religious emergency guides and access
+            them instantly from any device, even offline.
+          </p>
+          <a href="login.html?next=bookmarks.html"
+             class="btn btn-primary btn-lg btn-full">
+            Sign In to View Bookmarks
+          </a>
+          <div style="margin-top:var(--space-4);">
+            <a href="login.html?next=bookmarks.html"
+               style="font-size:var(--font-size-sm);
+                      color:var(--color-text-muted);">
+              Don't have an account?
+              <strong>Create one free →</strong>
+            </a>
+          </div>
+        </div>
+      `;
+      }
+
+      function showEmptyState() {
+        document.getElementById("mainContent").innerHTML = `
+        <div class="state-container">
+          <span class="state-icon">🔖</span>
+          <h2 class="state-title">No Saved Guides Yet</h2>
+          <p class="state-subtitle">
+            Save religious emergency guides to access them quickly
+            when you need them most. Your bookmarks sync across
+            all your devices.
+          </p>
+          <div style="display:flex; gap:1rem;
+                      justify-content:center; flex-wrap:wrap;">
+            <a href="religion.html" class="btn btn-primary">
+              Browse Guides
+            </a>
+            <a href="emergency.html" class="btn btn-emergency">
+              ⚡ Emergency Help
+            </a>
+          </div>
+        </div>
+      `;
+      }
+
+      function showError() {
+        document.getElementById("mainContent").innerHTML = `
+        <div class="state-container">
+          <span class="state-icon">⚠️</span>
+          <h2 class="state-title">Could Not Load Bookmarks</h2>
+          <p class="state-subtitle">
+            Please check your internet connection and try again.
+          </p>
+          <button class="btn btn-primary"
+            onclick="window.location.reload()">
+            Try Again
+          </button>
+        </div>
+      `;
+      }
+    </script>
+  </body>
+</html>

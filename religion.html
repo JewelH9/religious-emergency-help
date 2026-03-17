@@ -1579,24 +1579,30 @@
       function renderOverview(data) {
         document.getElementById("overviewIntro").textContent = data.intro;
         document.getElementById("keyFacts").innerHTML = `
-      <h3>Quick Facts</h3>
-      ${data.facts
-        .map(
-          (f) => `
-        <div class="fact-row">
-          <span class="fact-label">${f.label}</span>
-          <span class="fact-value">${f.value}</span>
-        </div>
-      `,
-        )
-        .join("")}
-      <div style="margin-top:var(--space-4);">
-        <a href="emergency.html?r=${currentReligion}"
-           class="btn btn-emergency btn-full">
-          ⚡ View Emergency Steps
-        </a>
+    <h3>Quick Facts</h3>
+    ${data.facts
+      .map(
+        (f) => `
+      <div class="fact-row">
+        <span class="fact-label">${f.label}</span>
+        <span class="fact-value">${f.value}</span>
       </div>
-    `;
+    `,
+      )
+      .join("")}
+    <div style="margin-top:var(--space-4);
+                display:flex; flex-direction:column; gap:var(--space-3);">
+      <a href="emergency.html?r=${currentReligion}"
+         class="btn btn-emergency btn-full">
+        ⚡ Emergency Steps
+      </a>
+      <button class="btn btn-secondary btn-full"
+        id="pageBookmarkBtn"
+        onclick="bookmarkThisGuide()">
+        🔖 Save This Guide
+      </button>
+    </div>
+  `;
       }
 
       // ---- Procedures ----
@@ -1891,6 +1897,68 @@
       }
 
       initPage();
+    </script>
+    <script type="module">
+      import { handleSaveBookmark, checkIfBookmarked } from "./js/bookmarks.js";
+
+      window.bookmarkThisGuide = async function () {
+        const religion = window.currentReligion;
+        if (!religion) return;
+
+        const user = localStorage.getItem("userEmail");
+        if (!user) {
+          showToast("Please sign in to save bookmarks.");
+          setTimeout(
+            () =>
+              (window.location.href = `login.html?next=religion.html?r=${religion}`),
+            1500,
+          );
+          return;
+        }
+
+        const btn = document.getElementById("pageBookmarkBtn");
+        if (btn) btn.disabled = true;
+
+        // Get guide name and icon from the page
+        const guideName =
+          document
+            .getElementById("heroTitle")
+            ?.textContent?.replace(" — Emergency Guide", "") || religion;
+        const guideIcon =
+          document.getElementById("heroIcon")?.textContent || "📖";
+
+        const result = await handleSaveBookmark(religion, guideName, guideIcon);
+
+        if (result.success) {
+          showToast(`${guideName} saved to bookmarks!`);
+          if (btn) {
+            btn.textContent = "✅ Saved";
+            btn.classList.add("btn-ghost");
+            btn.classList.remove("btn-secondary");
+          }
+        } else {
+          showToast("Could not save bookmark. Please try again.");
+          if (btn) btn.disabled = false;
+        }
+      };
+
+      // Check if already bookmarked on page load
+      document.addEventListener("DOMContentLoaded", async () => {
+        const religion = new URLSearchParams(window.location.search).get("r");
+        if (!religion) return;
+
+        const saved = await checkIfBookmarked(religion);
+        if (saved) {
+          setTimeout(() => {
+            const btn = document.getElementById("pageBookmarkBtn");
+            if (btn) {
+              btn.textContent = "✅ Saved";
+              btn.classList.add("btn-ghost");
+              btn.classList.remove("btn-secondary");
+            }
+          }, 1500);
+        }
+      });
     </script>
   </body>
 </html>
