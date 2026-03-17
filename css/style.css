@@ -838,3 +838,36 @@ textarea {
     padding: var(--space-4);
   }
 }
+
+/* ============================================
+   MULTI-LANGUAGE TYPOGRAPHY SUPPORT
+   ============================================ */
+
+/* Hindi (Devanagari) font support */
+:lang(hi) {
+  font-family: "Noto Sans Devanagari", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Bengali font support */
+:lang(bn) {
+  font-family: "Noto Sans Bengali", "Segoe UI", system-ui, sans-serif;
+}
+
+/* Larger line height for Indic scripts */
+:lang(hi) body,
+:lang(bn) body {
+  line-height: 1.8;
+}
+
+/* Language switcher active state color */
+.lang-btn.active {
+  background: #ffffff;
+  color: var(--color-bg-dark);
+  font-weight: 700;
+}
+
+/* Smooth text transition when language changes */
+[data-i18n],
+[data-i18n-placeholder] {
+  transition: opacity 0.15s ease;
+}

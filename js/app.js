@@ -1,82 +1,27 @@
 // ============================================
 // app.js — Core Application Bootstrap
-// Runs on every page
+// Runs on every page via <script src="js/app.js">
 // ============================================
 
-// ---------- Language System ----------
-const SUPPORTED_LANGS = ["en", "hi", "bn"];
-const DEFAULT_LANG = "en";
+// NOTE: app.js is a regular script (not a module)
+// so it uses dynamic import for the lang module
 
-let currentLang = localStorage.getItem("lang") || DEFAULT_LANG;
-let translations = {};
-
-async function loadLanguage(lang) {
-  if (!SUPPORTED_LANGS.includes(lang)) lang = DEFAULT_LANG;
+// ---- Language init (runs on every page) ----
+async function bootLanguage() {
   try {
-    const res = await fetch(`lang/${lang}.json`);
-    translations = await res.json();
-    currentLang = lang;
-    localStorage.setItem("lang", lang);
-    applyTranslations();
-    updateLangButtons();
+    const mod = await import("./js/lang.js");
+    const savedLang = localStorage.getItem("preferred_lang") || "en";
+    await mod.loadLanguage(savedLang);
+    mod.initLangSwitcher();
+
+    // Make t() globally available for inline scripts
+    window.t = mod.t;
   } catch (err) {
-    console.error("Failed to load language file:", err);
+    console.warn("Language system init failed:", err);
   }
 }
 
-function t(keyPath) {
-  // keyPath like "nav.home" or "common.loading"
-  const keys = keyPath.split(".");
-  let value = translations;
-  for (const key of keys) {
-    value = value?.[key];
-    if (value === undefined) return keyPath;
-  }
-  return value || keyPath;
-}
-
-function applyTranslations() {
-  // Apply to any element with data-i18n attribute
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    el.textContent = t(key);
-  });
-  // Apply to placeholders
-  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
-    const key = el.getAttribute("data-i18n-placeholder");
-    el.placeholder = t(key);
-  });
-}
-
-function updateLangButtons() {
-  document.querySelectorAll(".lang-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.lang === currentLang);
-  });
-}
-
-function initLanguageSwitcher() {
-  document.querySelectorAll(".lang-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      loadLanguage(btn.dataset.lang);
-    });
-  });
-}
-
-// ---------- Toast Notification ----------
-function showToast(message, duration = 3000) {
-  let toast = document.getElementById("toast");
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "toast";
-    toast.className = "toast";
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), duration);
-}
-
-// ---------- Mobile Navigation ----------
+// ---- Mobile Navigation ----
 function initMobileNav() {
   const toggle = document.querySelector(".nav-toggle");
   const navLinks = document.querySelector(".nav-links");
@@ -84,72 +29,104 @@ function initMobileNav() {
 
   toggle.addEventListener("click", () => {
     navLinks.classList.toggle("open");
+    // Animate hamburger
+    toggle.classList.toggle("open");
   });
 
-  // Close nav when a link is clicked
   navLinks.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
       navLinks.classList.remove("open");
+      toggle.classList.remove("open");
     });
   });
+
+  // Close nav when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!toggle.contains(e.target) && !navLinks.contains(e.target)) {
+      navLinks.classList.remove("open");
+      toggle.classList.remove("open");
+    }
+  });
 }
 
-// ---------- Active Navigation Link ----------
+// ---- Active Nav Link ----
 function setActiveNav() {
-  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+  const page = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-links a").forEach((link) => {
-    const href = link.getAttribute("href");
-    link.classList.toggle("active", href === currentPage);
+    const href = link.getAttribute("href")?.split("?")[0];
+    link.classList.toggle("active", href === page);
   });
 }
 
-// ---------- Utility: Format Date ----------
-function formatDate(timestamp) {
-  if (!timestamp) return "";
-  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-  return date.toLocaleDateString(currentLang === "en" ? "en-IN" : currentLang, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
+// ---- Toast Notification ----
+window.showToast = function (message, type = "default", duration = 3000) {
+  let toast = document.getElementById("toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast";
+    document.body.appendChild(toast);
+  }
 
-// ---------- Utility: Get URL Param ----------
-function getParam(name) {
-  return new URLSearchParams(window.location.search).get(name);
-}
+  // Set colour by type
+  const colors = {
+    default: "#0f172a",
+    success: "#166534",
+    error: "#991b1b",
+    warning: "#92400e",
+  };
+  toast.style.background = colors[type] || colors.default;
+  toast.textContent = message;
+  toast.classList.add("show");
 
-// ---------- Loading State ----------
-function showLoading() {
-  const overlay = document.createElement("div");
-  overlay.className = "loading-overlay";
-  overlay.id = "loading-overlay";
-  overlay.innerHTML = '<div class="spinner"></div>';
-  document.body.appendChild(overlay);
-}
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove("show"), duration);
+};
 
-function hideLoading() {
-  document.getElementById("loading-overlay")?.remove();
-}
-
-// ---------- App Init ----------
-document.addEventListener("DOMContentLoaded", async () => {
-  await loadLanguage(currentLang);
-  initMobileNav();
-  setActiveNav();
-  initLanguageSwitcher();
-});
-
-// ---- Auth state listener for non-module pages ----
-// Pages that don't import auth.js directly still get
-// nav updates via localStorage (set by auth.js observer)
-document.addEventListener("DOMContentLoaded", () => {
+// ---- Auth state from localStorage (non-Firebase pages) ----
+function syncAuthNav() {
   const authBtn = document.getElementById("authBtn");
-  const savedName = localStorage.getItem("userDisplayName");
   const savedEmail = localStorage.getItem("userEmail");
+  const savedName = localStorage.getItem("userDisplayName");
 
   if (authBtn && savedEmail) {
     authBtn.textContent = `👤 ${savedName || savedEmail.split("@")[0]}`;
     authBtn.href = "bookmarks.html";
   }
+}
+
+// ---- Utility: Get URL param ----
+window.getParam = function (name) {
+  return new URLSearchParams(window.location.search).get(name);
+};
+
+// ---- Utility: Format date ----
+window.formatDate = function (timestamp) {
+  if (!timestamp) return "";
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  return date.toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+// ---- Loading overlay ----
+window.showLoading = function () {
+  const el = document.createElement("div");
+  el.className = "loading-overlay";
+  el.id = "loading-overlay";
+  el.innerHTML = '<div class="spinner"></div>';
+  document.body.appendChild(el);
+};
+window.hideLoading = function () {
+  document.getElementById("loading-overlay")?.remove();
+};
+
+// ---- Boot on DOM ready ----
+document.addEventListener("DOMContentLoaded", () => {
+  bootLanguage();
+  initMobileNav();
+  setActiveNav();
+  syncAuthNav();
 });

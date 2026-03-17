@@ -19,7 +19,10 @@
     "title": "Emergency Help",
     "subtitle": "Select your religion for immediate step-by-step guidance",
     "immediate_steps": "Immediate Steps",
-    "step_label": "Step"
+    "step_label": "Step",
+    "do_first": "Do First",
+    "save_guide": "Save Guide",
+    "download_pdf": "Download PDF"
   },
   "religions": {
     "islam": "Islam",
@@ -60,5 +63,17 @@
     "back": "Back",
     "read_more": "Read More",
     "close": "Close"
+  },
+  "guide": {
+    "overview": "Overview",
+    "procedures": "Procedures",
+    "prayers": "Prayers & Texts",
+    "checklist": "Checklist",
+    "quick_facts": "Quick Facts",
+    "emergency_steps": "View Emergency Steps"
+  },
+  "footer": {
+    "tagline": "Free · Open Source · Made with care",
+    "copyright": "Religious Emergency Help"
   }
 }
