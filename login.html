@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — Religious Emergency Help</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--space-4);
+        background: var(--color-bg-page);
+        padding-top: calc(var(--nav-height) + var(--space-8));
+      }
+      .auth-card {
+        width: 100%;
+        max-width: 440px;
+        background: var(--color-bg-card);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--color-border);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+      }
+      .auth-header {
+        background: var(--color-bg-dark);
+        padding: var(--space-8) var(--space-8) var(--space-6);
+        text-align: center;
+      }
+      .auth-header-icon {
+        font-size: 2.5rem;
+        margin-bottom: var(--space-3);
+      }
+      .auth-header h1 {
+        font-size: var(--font-size-2xl);
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: var(--space-2);
+      }
+      .auth-header p {
+        font-size: var(--font-size-sm);
+        color: #94a3b8;
+      }
+      .auth-body {
+        padding: var(--space-8);
+      }
+
+      /* Toggle between Sign In / Sign Up */
+      .auth-toggle {
+        display: flex;
+        background: var(--color-bg-page);
+        border-radius: var(--radius-lg);
+        padding: var(--space-1);
+        margin-bottom: var(--space-6);
+        gap: var(--space-1);
+      }
+      .auth-toggle-btn {
+        flex: 1;
+        padding: var(--space-3);
+        border-radius: var(--radius-md);
+        font-size: var(--font-size-sm);
+        font-weight: 600;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: all var(--transition);
+        background: none;
+        border: none;
+        text-align: center;
+      }
+      .auth-toggle-btn.active {
+        background: var(--color-bg-card);
+        color: var(--color-text-primary);
+        box-shadow: var(--shadow-sm);
+      }
+
+      /* Form panels */
+      .auth-form {
+        display: none;
+      }
+      .auth-form.active {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      .auth-divider {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin: var(--space-2) 0;
+      }
+      .auth-divider::before,
+      .auth-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--color-border);
+      }
+      .auth-divider span {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+      }
+
+      .auth-footer-text {
+        text-align: center;
+        font-size: var(--font-size-sm);
+        color: var(--color-text-muted);
+        margin-top: var(--space-4);
+      }
+      .auth-footer-text a {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+
+      .password-wrapper {
+        position: relative;
+      }
+      .password-toggle {
+        position: absolute;
+        right: var(--space-3);
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--color-text-muted);
+        font-size: var(--font-size-sm);
+        padding: var(--space-1);
+      }
+
+      .strength-bar {
+        height: 4px;
+        background: var(--color-border);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+        margin-top: var(--space-1);
+      }
+      .strength-fill {
+        height: 100%;
+        border-radius: var(--radius-full);
+        transition: all var(--transition-slow);
+        width: 0%;
+      }
+      .strength-text {
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
+        margin-top: 2px;
+      }
+
+      #authError,
+      #authSuccess {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <div class="container">
+        <a href="index.html" class="nav-brand">
+          <div class="nav-brand-icon">✚</div>
+          <span>Emergency Help</span>
+        </a>
+        <div class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="emergency.html">Emergency</a>
+          <a href="religion.html">Religions</a>
+          <a href="search.html">Search</a>
+          <a href="emergency.html" class="nav-emergency-btn">⚡ Emergency</a>
+        </div>
+        <div class="nav-actions">
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="hi">हि</button>
+            <button class="lang-btn" data-lang="bn">বাং</button>
+          </div>
+        </div>
+        <button class="nav-toggle" id="navToggle">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- AUTH PAGE -->
+    <div class="auth-page">
+      <div class="auth-card">
+        <!-- Header -->
+        <div class="auth-header">
+          <div class="auth-header-icon">✚</div>
+          <h1>Religious Emergency Help</h1>
+          <p>Sign in to save bookmarks and access all features</p>
+        </div>
+
+        <!-- Body -->
+        <div class="auth-body">
+          <!-- Toggle -->
+          <div class="auth-toggle">
+            <button
+              class="auth-toggle-btn active"
+              id="toggleSignIn"
+              onclick="showPanel('signin')"
+            >
+              Sign In
+            </button>
+            <button
+              class="auth-toggle-btn"
+              id="toggleSignUp"
+              onclick="showPanel('signup')"
+            >
+              Create Account
+            </button>
+          </div>
+
+          <!-- Error / Success alerts -->
+          <div class="alert alert-error" id="authError">
+            <span>⚠️</span>
+            <span id="authErrorText"></span>
+          </div>
+          <div class="alert alert-success" id="authSuccess">
+            <span>✅</span>
+            <span id="authSuccessText"></span>
+          </div>
+
+          <!-- ── SIGN IN FORM ── -->
+          <form
+            class="auth-form active"
+            id="signinForm"
+            onsubmit="handleSignIn(event)"
+          >
+            <div class="form-group">
+              <label class="form-label" for="signinEmail">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="signinEmail"
+                class="form-input"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signinPassword"> Password </label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="signinPassword"
+                  class="form-input"
+                  placeholder="Your password"
+                  required
+                  autocomplete="current-password"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('signinPassword', this)"
+                >
+                  👁
+                </button>
+              </div>
+            </div>
+
+            <div
+              style="text-align: right; margin-top: calc(-1 * var(--space-2))"
+            >
+              <a
+                href="#"
+                style="font-size: var(--font-size-sm)"
+                onclick="showForgotPassword(event)"
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="signinBtn"
+            >
+              Sign In
+            </button>
+
+            <div class="auth-divider">
+              <span>or</span>
+            </div>
+
+            <div class="auth-footer-text">
+              Don't have an account?
+              <a href="#" onclick="showPanel('signup')"> Create one free </a>
+            </div>
+          </form>
+
+          <!-- ── SIGN UP FORM ── -->
+          <form
+            class="auth-form"
+            id="signupForm"
+            onsubmit="handleSignUp(event)"
+          >
+            <div class="form-group">
+              <label class="form-label" for="signupName"> Your Name </label>
+              <input
+                type="text"
+                id="signupName"
+                class="form-input"
+                placeholder="Your full name"
+                required
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signupEmail">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="signupEmail"
+                class="form-input"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signupPassword"> Password </label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="signupPassword"
+                  class="form-input"
+                  placeholder="At least 6 characters"
+                  required
+                  autocomplete="new-password"
+                  oninput="checkPasswordStrength(this.value)"
+                />
+                <button
+                  type="button"
+                  class="password-toggle"
+                  onclick="togglePassword('signupPassword', this)"
+                >
+                  👁
+                </button>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill" id="strengthFill"></div>
+              </div>
+              <div class="strength-text" id="strengthText"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signupConfirm">
+                Confirm Password
+              </label>
+              <div class="password-wrapper">
+                <input
+                  type="password"
+                  id="signupConfirm"
+                  class="form-input"
+                  placeholder="Repeat your password"
+                  required
+                  autocomplete="new-password"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-full"
+              id="signupBtn"
+            >
+              Create Account
+            </button>
+
+            <div class="auth-footer-text">
+              Already have an account?
+              <a href="#" onclick="showPanel('signin')"> Sign in </a>
+            </div>
+          </form>
+
+          <!-- ── FORGOT PASSWORD PANEL ── -->
+          <div class="auth-form" id="forgotForm">
+            <p
+              style="
+                font-size: var(--font-size-sm);
+                color: var(--color-text-secondary);
+                margin-bottom: var(--space-2);
+              "
+            >
+              Enter your email and we'll send you a reset link.
+            </p>
+            <div class="form-group">
+              <label class="form-label" for="forgotEmail">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="forgotEmail"
+                class="form-input"
+                placeholder="you@example.com"
+              />
+            </div>
+            <button
+              class="btn btn-primary btn-full"
+              onclick="handleForgotPassword()"
+            >
+              Send Reset Email
+            </button>
+            <div class="auth-footer-text">
+              <a href="#" onclick="showPanel('signin')"> ← Back to Sign In </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/app.js"></script>
+    <script type="module">
+      import {
+        signIn,
+        signUp,
+        resetPassword,
+        initAuthObserver,
+      } from "./js/auth.js";
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+      import { auth } from "./js/firebase-config.js";
+
+      // If already logged in, redirect away
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const next =
+            new URLSearchParams(window.location.search).get("next") ||
+            "index.html";
+          window.location.href = next;
+        }
+      });
+
+      // ---- Show/hide panels ----
+      window.showPanel = function (panel) {
+        ["signin", "signup", "forgot"].forEach((p) => {
+          document.getElementById(p + "Form").classList.remove("active");
+        });
+        document.getElementById(panel + "Form").classList.add("active");
+
+        document
+          .getElementById("toggleSignIn")
+          .classList.toggle("active", panel === "signin");
+        document
+          .getElementById("toggleSignUp")
+          .classList.toggle("active", panel === "signup");
+
+        hideAlerts();
+      };
+
+      // ---- Show forgot password ----
+      window.showForgotPassword = function (e) {
+        e.preventDefault();
+        showPanel("forgot");
+      };
+
+      // ---- Sign In handler ----
+      window.handleSignIn = async function (e) {
+        e.preventDefault();
+        const email = document.getElementById("signinEmail").value.trim();
+        const password = document.getElementById("signinPassword").value;
+        const btn = document.getElementById("signinBtn");
+
+        setLoading(btn, true, "Signing in...");
+        hideAlerts();
+
+        const result = await signIn(email, password);
+
+        if (result.success) {
+          showSuccess("Signed in successfully! Redirecting...");
+          setTimeout(() => {
+            const next =
+              new URLSearchParams(window.location.search).get("next") ||
+              "index.html";
+            window.location.href = next;
+          }, 1200);
+        } else {
+          showError(result.error);
+          setLoading(btn, false, "Sign In");
+        }
+      };
+
+      // ---- Sign Up handler ----
+      window.handleSignUp = async function (e) {
+        e.preventDefault();
+        const name = document.getElementById("signupName").value.trim();
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value;
+        const confirm = document.getElementById("signupConfirm").value;
+        const btn = document.getElementById("signupBtn");
+
+        if (password !== confirm) {
+          showError("Passwords do not match.");
+          return;
+        }
+        if (password.length < 6) {
+          showError("Password must be at least 6 characters.");
+          return;
+        }
+
+        setLoading(btn, true, "Creating account...");
+        hideAlerts();
+
+        const result = await signUp(email, password, name);
+
+        if (result.success) {
+          showSuccess("Account created! Welcome to Religious Emergency Help.");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1500);
+        } else {
+          showError(result.error);
+          setLoading(btn, false, "Create Account");
+        }
+      };
+
+      // ---- Forgot Password handler ----
+      window.handleForgotPassword = async function () {
+        const email = document.getElementById("forgotEmail").value.trim();
+        if (!email) {
+          showError("Please enter your email address.");
+          return;
+        }
+        hideAlerts();
+        const result = await resetPassword(email);
+        if (result.success) {
+          showSuccess("Reset email sent! Check your inbox.");
+        } else {
+          showError(result.error);
+        }
+      };
+
+      // ---- Password visibility toggle ----
+      window.togglePassword = function (fieldId, btn) {
+        const field = document.getElementById(fieldId);
+        if (field.type === "password") {
+          field.type = "text";
+          btn.textContent = "🙈";
+        } else {
+          field.type = "password";
+          btn.textContent = "👁";
+        }
+      };
+
+      // ---- Password strength checker ----
+      window.checkPasswordStrength = function (password) {
+        const fill = document.getElementById("strengthFill");
+        const text = document.getElementById("strengthText");
+        let strength = 0;
+
+        if (password.length >= 6) strength++;
+        if (password.length >= 10) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        const levels = [
+          { pct: "20%", color: "#ef4444", label: "Very weak" },
+          { pct: "40%", color: "#f97316", label: "Weak" },
+          { pct: "60%", color: "#eab308", label: "Fair" },
+          { pct: "80%", color: "#22c55e", label: "Strong" },
+          { pct: "100%", color: "#16a34a", label: "Very strong" },
+        ];
+
+        const level = levels[Math.min(strength - 1, 4)] || levels[0];
+        fill.style.width = password ? level.pct : "0%";
+        fill.style.background = password ? level.color : "";
+        text.textContent = password ? level.label : "";
+      };
+
+      // ---- Helpers ----
+      function showError(msg) {
+        const el = document.getElementById("authError");
+        document.getElementById("authErrorText").textContent = msg;
+        el.style.display = "flex";
+      }
+      function showSuccess(msg) {
+        const el = document.getElementById("authSuccess");
+        document.getElementById("authSuccessText").textContent = msg;
+        el.style.display = "flex";
+      }
+      function hideAlerts() {
+        document.getElementById("authError").style.display = "none";
+        document.getElementById("authSuccess").style.display = "none";
+      }
+      function setLoading(btn, loading, text) {
+        btn.disabled = loading;
+        btn.textContent = loading ? "⏳ " + text : text;
+      }
+    </script>
+  </body>
+</html>

@@ -139,3 +139,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   setActiveNav();
   initLanguageSwitcher();
 });
+
+// ---- Auth state listener for non-module pages ----
+// Pages that don't import auth.js directly still get
+// nav updates via localStorage (set by auth.js observer)
+document.addEventListener("DOMContentLoaded", () => {
+  const authBtn = document.getElementById("authBtn");
+  const savedName = localStorage.getItem("userDisplayName");
+  const savedEmail = localStorage.getItem("userEmail");
+
+  if (authBtn && savedEmail) {
+    authBtn.textContent = `👤 ${savedName || savedEmail.split("@")[0]}`;
+    authBtn.href = "bookmarks.html";
+  }
+});

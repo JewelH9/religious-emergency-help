@@ -1764,5 +1764,133 @@
       // Start the page
       initPage();
     </script>
+    <script type="module">
+      import { getGuide, getAllGuides } from "./js/db.js";
+      import { initAuthObserver } from "./js/auth.js";
+
+      // Make functions available globally for onclick handlers
+      window.showToast = window.showToast || function () {};
+      window.getParam = (k) =>
+        new URLSearchParams(window.location.search).get(k);
+
+      initAuthObserver();
+
+      // ---- Keep all your existing JS functions ----
+      // (checklistState, renderOverview, renderProcedures,
+      //  renderPrayers, renderChecklist, toggleCheck,
+      //  resetChecklist, handleDownloadPDF, switchTab)
+      // ---- ONLY replace initPage() with this: ----
+
+      async function initPage() {
+        const param = getParam("r");
+
+        if (!param) {
+          // Load all religions for the grid view
+          const result = await getAllGuides();
+          if (result.success) {
+            // allReligionsView is already rendered in HTML
+            // optionally update cards dynamically here
+          }
+          return;
+        }
+
+        // Show loading state
+        document.getElementById("allReligionsView").style.display = "none";
+        document.getElementById("singleReligionView").innerHTML =
+          `<div style="text-align:center; padding:4rem;">
+        <div class="spinner" style="margin:0 auto;"></div>
+        <p style="margin-top:1rem; color:var(--color-text-muted);">
+          Loading guide...
+        </p>
+      </div>`;
+        document.getElementById("singleReligionView").style.display = "block";
+
+        // Fetch from Firestore
+        const result = await getGuide(param);
+
+        if (!result.success) {
+          document.getElementById("singleReligionView").innerHTML =
+            `<div style="text-align:center; padding:4rem;">
+          <p style="color:var(--color-emergency); font-size:1.25rem;">
+            Guide not found. <a href="religion.html">Go back</a>
+          </p>
+        </div>`;
+          return;
+        }
+
+        // Restore the panel HTML
+        document.getElementById("singleReligionView").innerHTML = `
+      <div class="tab-panel active" id="panel-overview">
+        <div class="overview-grid">
+          <div>
+            <p class="overview-intro" id="overviewIntro"></p>
+            <div id="overviewExtra"></div>
+          </div>
+          <div class="key-facts" id="keyFacts"></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="panel-procedures">
+        <div id="proceduresContent"></div>
+      </div>
+      <div class="tab-panel" id="panel-prayers">
+        <div id="prayersContent"></div>
+      </div>
+      <div class="tab-panel" id="panel-checklist">
+        <div id="checklistContent"></div>
+        <div class="checklist-actions">
+          <button class="btn btn-primary" onclick="handleDownloadPDF()">
+            📄 Download PDF Checklist
+          </button>
+          <button class="btn btn-secondary" onclick="resetChecklist()">
+            🔄 Reset Checklist
+          </button>
+        </div>
+      </div>
+    `;
+
+        // Map Firestore data to the format render functions expect
+        const data = result.data;
+        window.currentReligion = param;
+        window.checklistState = {};
+
+        // Build procedures array from Firestore immediateSteps
+        data.procedures = [
+          {
+            title: "⚡ Immediate Steps",
+            icon: "🚨",
+            steps: (data.immediateSteps || []).map((s) => ({
+              n: s.order,
+              t: s.title,
+              d: s.detail,
+            })),
+          },
+        ];
+
+        // Tab bar
+        document.getElementById("tabBar").style.display = "block";
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+
+        // Render all panels
+        renderOverview(data);
+        renderProcedures(data);
+        renderPrayers(data);
+        renderChecklist(data);
+
+        // Update hero
+        document.getElementById("heroIcon").textContent = data.icon;
+        document.getElementById("heroTitle").textContent =
+          data.name + " — Emergency Guide";
+        document.getElementById("heroSubtitle").textContent = data.subtitle;
+        document.getElementById("heroTags").innerHTML = (data.tags || [])
+          .map((tag) => `<span class="guide-tag">${tag}</span>`)
+          .join("");
+
+        document.title = `${data.name} Guide — Religious Emergency Help`;
+      }
+
+      initPage();
+    </script>
   </body>
 </html>

@@ -1,0 +1,13 @@
+<script type="module">
+  import { initAuthObserver, logOut } from "./js/auth.js";
+  initAuthObserver();
+
+  // Make sign out available globally
+  window.handleSignOut = async function () {
+    const result = await logOut();
+    if (result.success) {
+      showToast("Signed out successfully.");
+      setTimeout(() => (window.location.href = "index.html"), 1000);
+    }
+  };
+</script>
